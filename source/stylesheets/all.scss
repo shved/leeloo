@@ -1,6 +1,82 @@
 @charset "utf-8";
 
+$ctrls_rad: 17px;
+$ctrls_height: 35px;
+
+@mixin round_bords($rad) {
+  -webkit-border-radius: $rad;
+  -moz-border-radius: $rad;
+  border-radius: $rad;
+}
+
+%hn_regular {
+  font-family: "HelveticaNeueRegular", "Helvetica Neue Regular", "HelveticaNeueRoman", "HelveticaNeue-Roman", "Helvetica Neue Roman", "TeXGyreHerosRegular", "Helvetica", "Tahoma", "Geneva", Arial, sans-serif;
+  font-weight: 300;
+  font-stretch: normal;
+}
+
+%hn_thin {
+  font-family: "HelveticaNeueThin", "HelveticaNeue-Thin", "Helvetica Neue Thin", "HelveticaNeue", "Helvetica Neue", "TeXGyreHerosRegular", Arial, sans-serif;
+  font-weight: 200;
+  font-stretch:normal;
+}
+
+%hn_ultra {
+  font-family: "HelveticaNeueUltraLight", "HelveticaNeue-Ultra-Light", "Helvetica Neue Ultra Light", "HelveticaNeue", "Helvetica Neue", "TeXGyreHerosRegular", Arial, sans-serif;
+  font-weight: 100;
+  font-stretch:normal;
+}
+
 body {
-  font-size: 46px;
-  font-family: Helvetica, Arial, sans-serif;
+  font-size: 22pt;
+  margin: 60px;
+  @extend %hn_regular;
+}
+
+a {
+  color: red;
+  text-decoration: none;
+  border-bottom: 2px solid red;
+}
+
+#speed_control {
+  padding: 0;
+  margin: 0 60px 60px 0;
+  height: $ctrls_height;
+  width: 290px;
+  background: red;
+  display: inline-block;
+  @include round_bords($ctrls_rad);
+  button {
+    padding: 0;
+    margin: 0 22px 14px 22px;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 16pt;
+    @extend %hn_thin;
+  }
+}
+
+#tags_input {
+  padding: 0 40px 0 20px;
+  margin: 0 60px 0 0;
+  position: relative;
+  top: -3px;
+  height: $ctrls_height;
+  width: 230px;
+  display: inline-block;
+  border: none;
+  background: blue;
+  font-style: italic;
+  font-size: 16pt;
+  color: white;
+  @extend %hn_ultra;
+  @include round_bords($ctrls_rad);
+}
+
+#about {
+  position: absolute;
+  bottom: 60px;
+  left: 60px;
 }
