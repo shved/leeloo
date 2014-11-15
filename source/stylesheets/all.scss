@@ -39,7 +39,7 @@ a {
   border-bottom: 2px solid red;
 }
 
-#speed_control {
+#speed-control {
   padding: 0;
   margin: 0 60px 60px 0;
   height: $ctrls_height;
@@ -61,7 +61,7 @@ a {
   }
 }
 
-#tags_input {
+#tags-input {
   padding: 0 40px 0 20px;
   margin: 0 60px 0 0;
   position: relative;
@@ -74,8 +74,8 @@ a {
   font-style: italic;
   font-size: 16pt;
   color: white;
-  @extend %hn_ultra;
   @include round_bords($ctrls_rad);
+  @extend %hn_ultra;
   &:focus {
     outline: none;
   }
@@ -103,7 +103,7 @@ a {
   flex-wrap: wrap;
   align-content: flex-start;
   margin: 0 60px 0 60px;
-  button {
+  .tag-item {
     align-self: auto;
     height: $ctrls_height;
     border: none;
@@ -111,21 +111,30 @@ a {
     color: white;
     font-size: 16pt;
     font-style: italic;
-    padding: 4px 20px 0 20px;
+    padding: 0 20px 0 20px;
     margin: 2px;
     text-align: left;
+    overflow: hidden;
     @extend %hn_ultra;
     @include round_bords($ctrls_rad);
     &:focus {
       outline: none;
     }
+    p {
+    @extend %hn_ultra;
+    display: inline-block;
+    text-align: left;
+    margin: 5px 0 0 0;
+    padding: 0;
+    overflow: hidden;
+    }
     .remove {
       height: 29px;
       width: 29px;
       background: #a0a0ff;
-      float: right;
+      display: inline-block;
       position: relative;
-      top: -2px;
+      top: 1px;
       left: 17px;
       @include round_bords($ctrls_rad - 2px);
     }
