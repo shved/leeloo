@@ -56,6 +56,9 @@ a {
     font-size: 16pt;
     @extend %hn_thin;
   }
+  button:focus {
+    outline: none;
+  }
 }
 
 #tags_input {
@@ -73,6 +76,60 @@ a {
   color: white;
   @extend %hn_ultra;
   @include round_bords($ctrls_rad);
+  &:focus {
+    outline: none;
+  }
+}
+
+.add {
+    background: #ebebff;
+    border: none;
+    position: absolute;
+    top: 63px;
+    left: 668px;
+    height: $ctrls_height - 6px;
+    width: $ctrls_height - 6px;
+    @include round_bords($ctrls_rad - 2px);
+    &:focus {
+      outline: none;
+    }
+}
+
+.container {
+  position: absolute;
+  top: 58px;
+  left: 695px;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  margin: 0 60px 0 60px;
+  button {
+    align-self: auto;
+    height: $ctrls_height;
+    border: none;
+    background: blue;
+    color: white;
+    font-size: 16pt;
+    font-style: italic;
+    padding: 4px 20px 0 20px;
+    margin: 2px;
+    text-align: left;
+    @extend %hn_ultra;
+    @include round_bords($ctrls_rad);
+    &:focus {
+      outline: none;
+    }
+    .remove {
+      height: 29px;
+      width: 29px;
+      background: #a0a0ff;
+      float: right;
+      position: relative;
+      top: -2px;
+      left: 17px;
+      @include round_bords($ctrls_rad - 2px);
+    }
+  }
 }
 
 #about {
