@@ -1,36 +1,39 @@
 @charset "utf-8";
 
-$ctrls_rad: 17px;
-$ctrls_height: 35px;
+$ctrls-rad: 17px;
+$ctrls-height: 35px;
+$speed-control-width: 288px;
+$body-margin: 60px;
+$input-width: 228px;
 
-@mixin round_bords($rad) {
+@mixin round-bords($rad) {
   -webkit-border-radius: $rad;
   -moz-border-radius: $rad;
   border-radius: $rad;
 }
 
-%hn_regular {
+%hn-regular {
   font-family: "HelveticaNeueRegular", "Helvetica Neue Regular", "HelveticaNeueRoman", "HelveticaNeue-Roman", "Helvetica Neue Roman", "TeXGyreHerosRegular", "Helvetica", "Tahoma", "Geneva", Arial, sans-serif;
   font-weight: 300;
   font-stretch: normal;
 }
 
-%hn_thin {
+%hn-thin {
   font-family: "HelveticaNeueThin", "HelveticaNeue-Thin", "Helvetica Neue Thin", "HelveticaNeue", "Helvetica Neue", "TeXGyreHerosRegular", Arial, sans-serif;
   font-weight: 200;
   font-stretch:normal;
 }
 
-%hn_ultra {
+%hn-ultra {
   font-family: "HelveticaNeueUltraLight", "HelveticaNeue-Ultra-Light", "Helvetica Neue Ultra Light", "HelveticaNeue", "Helvetica Neue", "TeXGyreHerosRegular", Arial, sans-serif;
   font-weight: 100;
   font-stretch:normal;
 }
 
 body {
-  font-size: 22pt;
-  margin: 60px;
-  @extend %hn_regular;
+  font-size: 16pt;
+  margin: $body-margin;
+  @extend %hn-regular;
 }
 
 a {
@@ -42,70 +45,111 @@ a {
 #speed-control {
   padding: 0;
   margin: 0 60px 60px 0;
-  height: $ctrls_height;
-  width: 290px;
+  height: $ctrls-height;
+  width: $speed-control-width;
   background: red;
   display: inline-block;
-  @include round_bords($ctrls_rad);
+  @include round-bords($ctrls-rad);
   button {
     padding: 0;
-    margin: 0 22px 14px 22px;
-    background: none;
+    margin: 5px 23px;
     border: none;
+    background: none;
     color: white;
     font-size: 16pt;
-    @extend %hn_thin;
-  }
-  button:focus {
-    outline: none;
+    cursor: pointer;
+    @extend %hn-thin;
+    &:focus {
+      outline: none;
+    }
+    &[state="selected"] {
+      background: rgb(250, 185, 185);
+      height: $ctrls-height - 4px;
+      padding: 5px 12px 0 12px;
+      margin: 2px 9px;
+      color: red;
+      @extend %hn-regular;
+      @include round-bords($ctrls-rad - 2px);
+    }
   }
 }
 
 #tags-input {
   padding: 0 40px 0 20px;
-  margin: 0 60px 0 0;
-  position: relative;
-  top: -3px;
-  height: $ctrls_height;
-  width: 230px;
+  margin: 0;
+  position: absolute;
+  top: 60px;
+  left: $body-margin + $speed-control-width + 60px;
+  height: $ctrls-height;
+  width: $input-width;
   display: inline-block;
   border: none;
   background: blue;
   font-style: italic;
   font-size: 16pt;
   color: white;
-  @include round_bords($ctrls_rad);
-  @extend %hn_ultra;
+  @include round-bords($ctrls-rad);
+  @extend %hn-ultra;
   &:focus {
     outline: none;
+  }
+  &[placeholder] {
+    padding: 0 40px 0 20px;
+    @extend %hn-ultra;
+    color: white;
+    font-style: italic;
+    font-size: 16pt;
   }
 }
 
 .add {
-    background: #ebebff;
+  cursor: pointer;
+  background: #ebebff;
+  border: none;
+  position: absolute;
+  top: 63px;
+  left: 664px;
+  height: $ctrls-height - 6px;
+  width: $ctrls-height - 6px;
+  @include round-bords($ctrls-rad - 4px);
+  &:focus {
+    outline: none;
+  }
+  .cross {
+    background: none;
     border: none;
-    position: absolute;
-    top: 63px;
-    left: 668px;
-    height: $ctrls_height - 6px;
-    width: $ctrls_height - 6px;
-    @include round_bords($ctrls_rad - 2px);
-    &:focus {
-      outline: none;
+    margin: 0;
+    .cross-one {
+      height: 17px;
+      width: 3px;
+      background: blue;
+      position: absolute;
+      top: 6px;
+      left: 14px;
     }
+    .cross-two {
+      height: 3px;
+      width: 17px;
+      background: blue;
+      position: absolute;
+      top: 13px;
+      left: 7px;
+    }
+  }
 }
 
 .container {
   position: absolute;
   top: 58px;
-  left: 695px;
+  left: $body-margin + $speed-control-width + 60px + $input-width + 58px;
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
   margin: 0 60px 0 60px;
   .tag-item {
+    cursor: pointer;
     align-self: auto;
-    height: $ctrls_height;
+    height: $ctrls-height;
     border: none;
     background: blue;
     color: white;
@@ -115,18 +159,18 @@ a {
     margin: 2px;
     text-align: left;
     overflow: hidden;
-    @extend %hn_ultra;
-    @include round_bords($ctrls_rad);
+    @extend %hn-ultra;
+    @include round-bords($ctrls-rad);
     &:focus {
       outline: none;
     }
     p {
-    @extend %hn_ultra;
-    display: inline-block;
-    text-align: left;
-    margin: 5px 0 0 0;
-    padding: 0;
-    overflow: hidden;
+      @extend %hn-ultra;
+      display: inline-block;
+      text-align: left;
+      margin: 5px 0 0 0;
+      padding: 0;
+      overflow: hidden;
     }
     .remove {
       height: 29px;
@@ -136,12 +180,35 @@ a {
       position: relative;
       top: 1px;
       left: 17px;
-      @include round_bords($ctrls_rad - 2px);
+      @include round-bords($ctrls-rad - 4px);
+      .cross {
+        background: none;
+        border: none;
+        margin: 0;
+        .cross-one {
+          height: 17px;
+          width: 3px;
+          background: blue;
+          position: absolute;
+          top: 6px;
+          left: 14px;
+        }
+        .cross-two {
+          height: 3px;
+          width: 17px;
+          background: blue;
+          position: absolute;
+          top: 13px;
+          left: 7px;
+        }
+      }
     }
   }
 }
 
 #about {
+  cursor: pointer;
+  font-size: 22pt;
   position: absolute;
   bottom: 60px;
   left: 60px;
