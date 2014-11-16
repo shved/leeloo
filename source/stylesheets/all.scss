@@ -43,16 +43,16 @@ a {
 }
 
 #speed-control {
-  padding: 0;
+  padding: 1px 0 0 0;
   margin: 0 60px 60px 0;
-  height: $ctrls-height;
+  height: $ctrls-height - 1px;
   width: $speed-control-width;
   background: red;
   display: inline-block;
   @include round-bords($ctrls-rad);
   button {
     padding: 0;
-    margin: 5px 23px;
+    margin: 1px 22px 0 22px;
     border: none;
     background: none;
     color: white;
@@ -63,13 +63,14 @@ a {
       outline: none;
     }
     &[state="selected"] {
-      background: rgb(250, 185, 185);
+      background: #fab9b9;
       height: $ctrls-height - 4px;
-      padding: 5px 12px 0 12px;
-      margin: 2px 9px;
+      cursor: auto;
+      padding: 0 17px 0 18px;
+      margin: 1px 4px 0 4px;
       color: red;
       @extend %hn-regular;
-      @include round-bords($ctrls-rad - 2px);
+      @include round-bords($ctrls-rad - 3px);
     }
   }
 }
@@ -93,12 +94,11 @@ a {
   &:focus {
     outline: none;
   }
-  &[placeholder] {
-    padding: 0 40px 0 20px;
-    @extend %hn-ultra;
+  &::-webkit-input-placeholder {
     color: white;
-    font-style: italic;
-    font-size: 16pt;
+  }
+  &:-moz-placeholder {
+    color: white;
   }
 }
 
@@ -192,6 +192,7 @@ a {
           position: absolute;
           top: 6px;
           left: 14px;
+          transform: rotate(45deg);
         }
         .cross-two {
           height: 3px;
@@ -200,9 +201,44 @@ a {
           position: absolute;
           top: 13px;
           left: 7px;
+          transform: rotate(45deg);
         }
       }
     }
+  }
+}
+
+.control {
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: rgba(0, 0, 0, .5);
+  position: fixed;
+  left: 460px;
+  top: 195px;
+  height: 242px;
+  width: 242px;
+  @include round-bords(121px);
+  .pause {
+    position: relative;
+    left: 75px;
+    top: 50px;
+    .pause-one {
+      height: 142px;
+      width: 30px;
+      background: rgba(255, 255, 255, 0.7);
+    }
+    .pause-two {
+      height: 142px;
+      width: 30px;
+      background: rgba(255, 255, 255, 0.7);
+      position: relative;
+      left: 62px;
+      top: -142px;
+    }
+  }
+  .play {
+    visible: none;
   }
 }
 
