@@ -34,12 +34,17 @@ body {
   font-size: 16pt;
   margin: $body-margin;
   @extend %hn-regular;
+  background: gray;
 }
 
 a {
   color: red;
   text-decoration: none;
   border-bottom: 2px solid red;
+}
+
+.images-layer {
+  z-index: -1;
 }
 
 #speed-control {
@@ -62,7 +67,7 @@ a {
     &:focus {
       outline: none;
     }
-    &[state="selected"] {
+    &.selected {
       background: #fab9b9;
       height: $ctrls-height - 4px;
       cursor: auto;
@@ -139,16 +144,23 @@ a {
 }
 
 .container {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: raw;
+  flex-direction: raw;
+  -webkit-flex-wrap: wrap;
+  flex-wrap: wrap;
+
+  z-index: 0;
   position: absolute;
   top: 58px;
   left: $body-margin + $speed-control-width + 60px + $input-width + 58px;
-  display: flex;
-  flex-wrap: wrap;
-  align-content: flex-start;
   margin: 0 60px 0 60px;
   .tag-item {
+    -webkit-flex: wrap;
+    flex: wrap;
+
     cursor: pointer;
-    align-self: auto;
     height: $ctrls-height;
     border: none;
     background: blue;
@@ -157,7 +169,6 @@ a {
     font-style: italic;
     padding: 0 20px 0 20px;
     margin: 2px;
-    text-align: left;
     overflow: hidden;
     @extend %hn-ultra;
     @include round-bords($ctrls-rad);
@@ -171,6 +182,8 @@ a {
       margin: 5px 0 0 0;
       padding: 0;
       overflow: hidden;
+      vertical-align: middle;
+      line-height: 16pt;
     }
     .remove {
       height: 29px;
@@ -178,8 +191,10 @@ a {
       background: #a0a0ff;
       display: inline-block;
       position: relative;
-      top: 1px;
+      top: 3px;
       left: 17px;
+      vertical-align: middle;
+      line-height: 16pt;
       @include round-bords($ctrls-rad - 4px);
       .cross {
         background: none;
@@ -193,6 +208,7 @@ a {
           top: 6px;
           left: 14px;
           transform: rotate(45deg);
+          -webkit-transform: rotate(45deg);
         }
         .cross-two {
           height: 3px;
@@ -202,6 +218,7 @@ a {
           top: 13px;
           left: 7px;
           transform: rotate(45deg);
+          -webkit-transform: rotate(45deg);
         }
       }
     }
@@ -214,15 +231,18 @@ a {
   border: none;
   background: rgba(0, 0, 0, .5);
   position: fixed;
-  left: 460px;
-  top: 195px;
+  left: 50%;
+  top: 50%;
+  margin: -121px -121px;
   height: 242px;
   width: 242px;
+  cursor: pointer;
   @include round-bords(121px);
   .pause {
     position: relative;
     left: 75px;
     top: 50px;
+    visibility: hidden;
     .pause-one {
       height: 142px;
       width: 30px;
@@ -238,7 +258,14 @@ a {
     }
   }
   .play {
-    visible: none;
+    width: 0;
+    height: 0;
+    border-top: 71px solid transparent;
+    border-bottom: 71px solid transparent;
+    border-left: 110px solid rgba(255, 255, 255, 0.7);
+    position: relative;
+    left: 82px;
+    top: -232px;
   }
 }
 
@@ -248,4 +275,50 @@ a {
   position: absolute;
   bottom: 60px;
   left: 60px;
+}
+
+.about {
+  background: rgba(0, 0, 0, 0.85);
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 1;
+  display: none;
+  p {
+    @extend %hn-regular;
+    color: white;
+    margin: 200px auto;
+    width: 60%;
+  }
+  .close-about {
+    cursor: pointer;
+    @include round-bords(42px);
+    background: rgb(50, 50, 50);
+    height: 85px;
+    width: 85px;
+    float: right;
+    margin: 40px;
+    .cross-one {
+      height: 50px;
+      width: 7px;
+      background: red;
+      position: relative;
+      left: 40px;
+      top: 19px;
+      transform: rotate(45deg);
+      -webkit-transform: rotate(45deg);
+    }
+    .cross-two {
+      height: 7px;
+      width: 50px;
+      background: red;
+      position: relative;
+      left: 18px;
+      top: -10px;
+      transform: rotate(45deg);
+      -webkit-transform: rotate(45deg);
+    }
+  }
 }
