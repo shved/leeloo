@@ -17,26 +17,52 @@ class Leeloo
         $('#speed-control').find('.' + @speed).addClass('selected')
         $('.about').hide()
 
+    fetchImagesByKeyword: (keyword) ->
+
+
     setSpeed: (newSpeed) ->
         if @speed == 'slow' or 'normal' or 'high'
             $('#speed-control .selected').removeClass('selected')
             @speed = newSpeed
             $('#speed-control').find('.' + @speed).addClass('selected')
 
-    imageQueue: {
+    startCarousel: ->
+        console.log('started')
+        fetchGoogleImagesByKeyword('webpunk')
 
+###
+ajax requests declarations
+###
+
+###
+google image search
+###
+
+fetchGoogleImagesByKeyword = (keyword) ->
+    reqURL = 'http://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=8&imgsz=large&q=' + keyword + '&safe=off&start=0'
+    $.ajax({
+    url: reqURL,
+    jsonp: "callback",
+    dataType: "jsonp",
+    data: {
+        q: "select title,abstract,url from search.news where query=\"cat\"",
+        format: "json"
+    },
+
+    // Work with the response
+    success: function( response ) {
+        console.log( response ); // server response
     }
+});
 
-class Image
-    constructor: (@url, @position) ->
 
 ###
 main stuff
 ###
 $(document).ready ->
-    console.log('start')
 
     leeloo = new Leeloo(speed, tags, state)
+    leeloo.startCarousel()
 
     $('.slow').on('click', ->
         leeloo.setSpeed('slow')
