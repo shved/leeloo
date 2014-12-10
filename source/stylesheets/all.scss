@@ -43,8 +43,9 @@ a {
   border-bottom: 2px solid red;
 }
 
-.images-layer {
+.image {
   z-index: -1;
+  position: absolute;
 }
 
 #speed-control {

@@ -16,8 +16,13 @@ class Leeloo
     constructor: (@speed='normal', @tags=['webpunk', 'Кадыров', 'mandelbrot'], @state='play') ->
         $('#speed-control').find('.' + @speed).addClass('selected')
         $('.about').hide()
+        $('.container').append()
+        for tag in tags
+            $('.container').append('<div class="tag-item"><p>' + tag + '</p><div class="remove"><div class="cross"><div class="cross-one"></div><div class="cross-two"></div></div></div></div>')
+            this.fetchImagesByKeyword(tag)
 
     fetchImagesByKeyword: (keyword) ->
+        fetchGoogleImages(keyword)
 
 
     setSpeed: (newSpeed) ->
@@ -26,35 +31,41 @@ class Leeloo
             @speed = newSpeed
             $('#speed-control').find('.' + @speed).addClass('selected')
 
-    startCarousel: ->
-        console.log('started')
-        fetchGoogleImagesByKeyword('webpunk')
+imageQueue = []
+
+pushImagesIntoQueue = (response) ->
+    for result in response.responseData.results
+        imageQueue.push {
+            url: result.url
+            width: result.width
+            height: result.height
+        }
+    for image in imageQueue
+        $('.images-layer').append('<img class="image image-' + imageQueue.indexOf(image) + '" src="' + image.url + '"/>')
+        $('.image-' + imageQueue.indexOf(image)).css('left', Math.floor(Math.random() * ($(window).width() - image.width)))
+        $('.image-' + imageQueue.indexOf(image)).css('top', Math.floor(Math.random() * ($(window).height() - image.height)))
 
 ###
-ajax requests declarations
+ajax requests stuff
 ###
 
 ###
 google image search
 ###
 
-fetchGoogleImagesByKeyword = (keyword) ->
-    reqURL = 'http://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=8&imgsz=large&q=' + keyword + '&safe=off&start=0'
-    $.ajax({
-    url: reqURL,
-    jsonp: "callback",
-    dataType: "jsonp",
-    data: {
-        q: "select title,abstract,url from search.news where query=\"cat\"",
-        format: "json"
-    },
-
-    // Work with the response
-    success: function( response ) {
-        console.log( response ); // server response
-    }
-});
-
+fetchGoogleImages = (keyword) ->
+    reqURL = 'http://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=8&imgsz=large&q=' + keyword + '&safe=off'
+    querys = [0, 8, 16]
+    $.map(querys, (start) ->
+        $.ajax {
+            url: reqURL,
+            dataType: "jsonp",
+            success: (response) ->
+                pushImagesIntoQueue(response)
+            data: {
+                    'start': start
+                }
+            })
 
 ###
 main stuff
@@ -62,7 +73,6 @@ main stuff
 $(document).ready ->
 
     leeloo = new Leeloo(speed, tags, state)
-    leeloo.startCarousel()
 
     $('.slow').on('click', ->
         leeloo.setSpeed('slow')
