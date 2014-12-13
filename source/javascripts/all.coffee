@@ -26,26 +26,25 @@ setSpeed = (newSpeed) ->
         speed = newSpeed
         $('#speed-control').find('.' + speed).addClass('selected')
 
-pushImagesIntoQueue = (response, keyword) ->
+pushImagesIntoQueue = (response, tag) ->
     for result in response.responseData.results
         imageQueue.push {
             url: result.url
             width: result.width
             height: result.height
-            keyword: keyword
+            tag: tag
             shown: false
         }
 
 addImageIntoDOM = ->
     if imageQueue.length > 0
-        console.log(imageQueue.length)
         for image in imageQueue
-            console.log
-            if not image.shown
+            if (not image.shown) && (image.tag != lastShownImageTag)
                 $('.images-layer').append('<img class="image image-' + imageQueue.indexOf(image) + '" src="' + image.url + '"/>')
                 $('.image-' + imageQueue.indexOf(image)).css('left', Math.floor(Math.random() * ($(window).width() - image.width)))
                 $('.image-' + imageQueue.indexOf(image)).css('top', Math.floor(Math.random() * ($(window).height() - image.height)))
                 $('.image-' + imageQueue.indexOf(image)).show()
+                lastShownImageTag = image.tag
                 image.shown = true
                 break
 ###
