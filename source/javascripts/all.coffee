@@ -11,8 +11,7 @@ state = 'play'
 
 imageQueue = []
 imagesOnTheDOM = []
-
-lastShownImageTag = ''
+imagesPuff = 24
 
 ###
 functions
@@ -38,15 +37,22 @@ pushImagesIntoQueue = (response, tag) ->
 
 addImageIntoDOM = ->
     if imageQueue.length > 0
-        for image in imageQueue
-            if (not image.shown) && (image.tag != lastShownImageTag)
-                $('.images-layer').append('<img class="image image-' + imageQueue.indexOf(image) + '" src="' + image.url + '"/>')
-                $('.image-' + imageQueue.indexOf(image)).css('left', Math.floor(Math.random() * ($(window).width() - image.width)))
-                $('.image-' + imageQueue.indexOf(image)).css('top', Math.floor(Math.random() * ($(window).height() - image.height)))
-                $('.image-' + imageQueue.indexOf(image)).show()
-                lastShownImageTag = image.tag
-                image.shown = true
-                break
+        imageIndex = Math.floor(Math.random() * imageQueue.length)
+        #showing image
+        $('.images-layer').append('<img class="image image-' + imageIndex + '" src="' + imageQueue[imageIndex].url + '"/>')
+        $('.image-' + imageIndex).css('left', Math.floor(Math.random() * ($(window).width() - imageQueue[imageIndex].width)))
+        $('.image-' + imageIndex).css('top', Math.floor(Math.random() * ($(window).height() - imageQueue[imageIndex].height)))
+        $('.image-' + imageIndex).show()
+        imageQueue[imageIndex].shown = true
+        imagesOnTheDOM.push(imageQueue[imageIndex])
+        imageQueue.splice(imageIndex, 1)
+        removeImageFromDOMToQueue()
+
+removeImageFromDOMToQueue = ->
+    if imagesOnTheDOM >= imagesPuff || imageQueue < 3
+        imageQueue.push(imagesOnTheDOM.shift())
+        console.log(imageQueue.length, imagesOnTheDOM.length)
+
 ###
 ajax requests stuff
 ###
