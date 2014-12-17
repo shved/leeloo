@@ -11,7 +11,9 @@ state = 'play'
 
 imageQueue = []
 imagesOnTheDOM = []
-imagesPuff = 24
+imagesPuff = 10
+
+uniqueImageClass = 0
 
 ###
 functions
@@ -20,10 +22,11 @@ fetchImagesByKeyword = (keyword) ->
     fetchGoogleImages(keyword)
 
 setSpeed = (newSpeed) ->
-    if speed == 'slow' or 'normal' or 'high'
-        $('#speed-control .selected').removeClass('selected')
+    if newSpeed == 'slow' or 'normal' or 'high'
+        console.log('asdf')
+        $('.speed-control .selected').removeClass('selected')
         speed = newSpeed
-        $('#speed-control').find('.' + speed).addClass('selected')
+        $('.speed-control').find('.' + speed).addClass('selected')
 
 pushImagesIntoQueue = (response, tag) ->
     for result in response.responseData.results
@@ -34,24 +37,28 @@ pushImagesIntoQueue = (response, tag) ->
             tag: tag
             shown: false
         }
+        #console.log('imageQueue:', imageQueue.length, ' pushImagesIntoQueue')
 
 addImageIntoDOM = ->
     if imageQueue.length > 0
         imageIndex = Math.floor(Math.random() * imageQueue.length)
+        uniqueImageClass += 1
         #showing image
-        $('.images-layer').append('<img class="image image-' + imageIndex + '" src="' + imageQueue[imageIndex].url + '"/>')
-        $('.image-' + imageIndex).css('left', Math.floor(Math.random() * ($(window).width() - imageQueue[imageIndex].width)))
-        $('.image-' + imageIndex).css('top', Math.floor(Math.random() * ($(window).height() - imageQueue[imageIndex].height)))
-        $('.image-' + imageIndex).show()
+        $('.images-layer').append('<img class="image image-' + uniqueImageClass + '" src="' + imageQueue[imageIndex].url + '"/>')
+        $('.image-' + uniqueImageClass).css('left', Math.floor(Math.random() * ($(window).width() - imageQueue[imageIndex].width)))
+        $('.image-' + uniqueImageClass).css('top', Math.floor(Math.random() * ($(window).height() - imageQueue[imageIndex].height)))
+        $('.image-' + uniqueImageClass).show()
         imageQueue[imageIndex].shown = true
         imagesOnTheDOM.push(imageQueue[imageIndex])
         imageQueue.splice(imageIndex, 1)
         removeImageFromDOMToQueue()
+        #console.log('imagesOnTheDOM:' + imagesOnTheDOM.length + ' addImageIntoDOM')
 
 removeImageFromDOMToQueue = ->
-    if imagesOnTheDOM >= imagesPuff || imageQueue < 3
+    if (imagesOnTheDOM.length >= imagesPuff) || (imageQueue < 3)
+        imagesOnTheDOM[0].shown = false
         imageQueue.push(imagesOnTheDOM.shift())
-        console.log(imageQueue.length, imagesOnTheDOM.length)
+        #console.log('imagesOnTheDOM:' + imagesOnTheDOM.length + ', imageQueue:' + imageQueue.length)
 
 ###
 ajax requests stuff
@@ -64,7 +71,7 @@ google image search
 fetchGoogleImages = (keyword) ->
     reqURL = 'http://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=8&imgsz=large&q=' + keyword + '&safe=off'
     querys = [0, 8, 16]
-    querys = [0]
+    #querys = [0]
     $.map(querys, (start) ->
         $.ajax {
             url: reqURL,
@@ -81,24 +88,23 @@ main stuff
 ###
 $(document).ready ->
 
-    $('#speed-control').find('.' + speed).addClass('selected')
-    $('.container').append()
+    $('.speed-control').find('.' + speed).addClass('selected')
     for tag in tags
         $('.container').append('<div class="tag-item"><p>' + tag + '</p><div class="remove"><div class="cross"><div class="cross-one"></div><div class="cross-two"></div></div></div></div>')
         fetchImagesByKeyword(tag)
 
-    setInterval(addImageIntoDOM, 1000)
+    setInterval(addImageIntoDOM, 2000)
 
     $('.slow').on('click', ->
-        leeloo.setSpeed('slow')
+        setSpeed('slow')
     )
 
     $('.normal').on('click', ->
-        leeloo.setSpeed('normal')
+        setSpeed('normal')
     )
 
     $('.high').on('click', ->
-        leeloo.setSpeed('high')
+        setSpeed('high')
     )
 
     $('#about').on('click', ->
@@ -109,6 +115,6 @@ $(document).ready ->
         $('.about').hide();
     )
 
-
-
-
+    $('.add').on('click', ->
+        console.log($('.tags-input').val())
+    )
