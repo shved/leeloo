@@ -11,7 +11,7 @@ state = 'play'
 
 imageQueue = []
 imagesOnTheDOM = []
-imagesPuff = 10
+imagesPuff = 20
 
 uniqueImageClass = 0
 
@@ -40,7 +40,7 @@ pushImagesIntoQueue = (response, tag) ->
         #console.log('imageQueue:', imageQueue.length, ' pushImagesIntoQueue')
 
 addImageIntoDOM = ->
-    if imageQueue.length > 0
+    if imageQueue.length > 2
         imageIndex = Math.floor(Math.random() * imageQueue.length)
         uniqueImageClass += 1
         #showing image
@@ -55,7 +55,8 @@ addImageIntoDOM = ->
         #console.log('imagesOnTheDOM:' + imagesOnTheDOM.length + ' addImageIntoDOM')
 
 removeImageFromDOMToQueue = ->
-    if (imagesOnTheDOM.length >= imagesPuff) || (imageQueue < 3)
+    if (imagesOnTheDOM.length >= imagesPuff) || (imageQueue < 4)
+        $('.images-layer > img:first').remove()
         imagesOnTheDOM[0].shown = false
         imageQueue.push(imagesOnTheDOM.shift())
         #console.log('imagesOnTheDOM:' + imagesOnTheDOM.length + ', imageQueue:' + imageQueue.length)
@@ -71,7 +72,7 @@ google image search
 fetchGoogleImages = (keyword) ->
     reqURL = 'http://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=8&imgsz=large&q=' + keyword + '&safe=off'
     querys = [0, 8, 16]
-    #querys = [0]
+    querys = [0]
     $.map(querys, (start) ->
         $.ajax {
             url: reqURL,
@@ -93,7 +94,7 @@ $(document).ready ->
         $('.container').append('<div class="tag-item"><p>' + tag + '</p><div class="remove"><div class="cross"><div class="cross-one"></div><div class="cross-two"></div></div></div></div>')
         fetchImagesByKeyword(tag)
 
-    setInterval(addImageIntoDOM, 2000)
+    setInterval(addImageIntoDOM, 1000)
 
     $('.slow').on('click', ->
         setSpeed('slow')
@@ -116,5 +117,8 @@ $(document).ready ->
     )
 
     $('.add').on('click', ->
-        console.log($('.tags-input').val())
+        newTag = $('.tags-input').val()
+        tags.push(newTag)
+        $('.container').append('<div class="tag-item"><p>' + newTag + '</p><div class="remove"><div class="cross"><div class="cross-one"></div><div class="cross-two"></div></div></div></div>')
+        fetchImagesByKeyword(newTag)
     )
