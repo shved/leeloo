@@ -6,7 +6,7 @@ speed could be: slow, normal, high
 ###
 
 speed = 'normal'
-tags = ['webpunk', 'Кадыров', 'mandelbrot']
+tags = ['webpunk', 'Кадыров', 'mandelbrot', 'Путин', 'мотоцикл', 'нож']
 state = 'play'
 
 imageQueue = []
@@ -57,8 +57,9 @@ addImageIntoDOM = ->
 removeImageFromDOMToQueue = ->
     if (imagesOnTheDOM.length >= imagesPuff) || (imageQueue < 4)
         $('.images-layer > img:first').remove()
-        imagesOnTheDOM[0].shown = false
-        imageQueue.push(imagesOnTheDOM.shift())
+        if imagesOnTheDOM[0].tag in tags
+            imagesOnTheDOM[0].shown = false
+            imageQueue.push(imagesOnTheDOM.shift())
         #console.log('imagesOnTheDOM:' + imagesOnTheDOM.length + ', imageQueue:' + imageQueue.length)
 
 ###
@@ -70,7 +71,7 @@ google image search
 ###
 
 fetchGoogleImages = (keyword) ->
-    reqURL = 'http://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=8&imgsz=large&q=' + keyword + '&safe=off'
+    reqURL = 'http://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=8&imgsz=medium&q=' + keyword + '&safe=off'
     querys = [0, 8, 16]
     querys = [0]
     $.map(querys, (start) ->
@@ -116,9 +117,25 @@ $(document).ready ->
         $('.about').hide();
     )
 
-    $('.add').on('click', ->
-        newTag = $('.tags-input').val()
-        tags.push(newTag)
-        $('.container').append('<div class="tag-item"><p>' + newTag + '</p><div class="remove"><div class="cross"><div class="cross-one"></div><div class="cross-two"></div></div></div></div>')
-        fetchImagesByKeyword(newTag)
+    $('.add').on('click', (event) ->
+        event.stopPropagation()
+        event.preventDefault()
+        if $('.tags-input').val()
+            newTag = $('.tags-input').val()
+            tags.push(newTag)
+            $('.container').append('<div class="tag-item"><p>' + newTag + '</p><div class="remove"><div class="cross"><div class="cross-one"></div><div class="cross-two"></div></div></div></div>')
+            $('.tags-input').val('')
+            fetchImagesByKeyword(newTag)
+    )
+
+    $('.remove').on('click', ->
+        removedTag = $(this).prev().html()
+        index = tags.indexOf(removedTag)
+        console.log tags, removedTag
+        if index > 1
+            tags.splice(index, 1)
+        imageQueue = $.grep(imageQueue, (image) ->
+            return image.tag != removedTag
+        )
+        $(this).parent().remove()
     )
