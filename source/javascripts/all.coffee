@@ -23,7 +23,6 @@ fetchImagesByKeyword = (keyword) ->
 
 setSpeed = (newSpeed) ->
     if newSpeed == 'slow' or 'normal' or 'high'
-        console.log('asdf')
         $('.speed-control .selected').removeClass('selected')
         speed = newSpeed
         $('.speed-control').find('.' + speed).addClass('selected')
@@ -37,7 +36,6 @@ pushImagesIntoQueue = (response, tag) ->
             tag: tag
             shown: false
         }
-        #console.log('imageQueue:', imageQueue.length, ' pushImagesIntoQueue')
 
 addImageIntoDOM = ->
     if imageQueue.length > 2
@@ -52,7 +50,6 @@ addImageIntoDOM = ->
         imagesOnTheDOM.push(imageQueue[imageIndex])
         imageQueue.splice(imageIndex, 1)
         removeImageFromDOMToQueue()
-        #console.log('imagesOnTheDOM:' + imagesOnTheDOM.length + ' addImageIntoDOM')
 
 removeImageFromDOMToQueue = ->
     if (imagesOnTheDOM.length >= imagesPuff) || (imageQueue < 4)
@@ -60,7 +57,6 @@ removeImageFromDOMToQueue = ->
         if imagesOnTheDOM[0].tag in tags
             imagesOnTheDOM[0].shown = false
             imageQueue.push(imagesOnTheDOM.shift())
-        #console.log('imagesOnTheDOM:' + imagesOnTheDOM.length + ', imageQueue:' + imageQueue.length)
 
 ###
 ajax requests stuff
