@@ -8,7 +8,7 @@ speed could be: slow, normal, high
 speed = 'normal'
 tags = ['небо', 'Кадыров', 'mandelbrot']
 playing = true
-interval = 1000
+interval = 2000
 
 imageQueue = []
 imagesPuff = 20
@@ -37,15 +37,33 @@ fetchImagesByKeyword = (keyword) ->
 setSpeed = (newSpeed) ->
     if newSpeed == 'slow' or 'normal' or 'high'
         $('.speed-control .selected').removeClass('selected')
+        $('.speed-control').find('.' + newSpeed).addClass('selected')
+        switch newSpeed
+            when 'slow' then interval = 4000
+            when 'normal' then interval = 2000
+            when 'high' then interval = 1000
+            else interval = 2000
+        clearInterval(imageShowTick)
+        imageShowTick = setInterval(addImageIntoDOM, interval)
         speed = newSpeed
-        $('.speed-control').find('.' + speed).addClass('selected')
+
 
 pushImagesIntoQueue = (response, tag) ->
     for result in response.responseData.results
+        width = result.width
+        height = result.height
+        ratio = height / width
+        if (width > ($(window).width() || 800)) && (ratio <= 1)
+            width = 800
+            height = width * ratio
+        else if (height > ($(window).height() || 800))
+            height = 800
+            width = height / ratio
+
         imageQueue.push {
             url: result.url
-            width: result.width
-            height: result.height
+            width: width
+            height: height
             tag: tag
         }
     imageQueue.shuffle()
@@ -59,6 +77,8 @@ addImageIntoDOM = ->
     $('.images-layer').append('<img class="image image-' + uniqueImageClass + '" src="' + imageQueue[imageIndex].url + '"/>')
     $('.image-' + uniqueImageClass).css('left', Math.floor(Math.random() * ($(window).width() - imageQueue[imageIndex].width)))
     $('.image-' + uniqueImageClass).css('top', Math.floor(Math.random() * ($(window).height() - imageQueue[imageIndex].height)))
+    $('.image-' + uniqueImageClass).css('width', imageQueue[imageIndex].width)
+    $('.image-' + uniqueImageClass).css('height', imageQueue[imageIndex].height)
     $('.image-' + uniqueImageClass).show()
     if $('.images-layer > img').length > imagesPuff
         $('.images-layer > img:first').remove()
@@ -72,8 +92,8 @@ google image search
 ###
 
 fetchGoogleImages = (keyword) ->
-    reqURL = 'http://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=8&imgsz=medium&q=' + keyword + '&safe=off'
-    querys = [0, 8, 16]
+    reqURL = 'http://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=8&imgsz=large&q=' + keyword + '&safe=off'
+    querys = [0, 8, 16, 24]
     $.map(querys, (start) ->
         $.ajax {
             url: reqURL,
@@ -94,11 +114,13 @@ $(document).ready ->
         $('.control > .play').hide()
         imageShowTick = setInterval(addImageIntoDOM, interval)
 
-    $('.speed-control').find('.' + speed).addClass('selected')
+    setSpeed(speed)
+
     for tag in tags
         $('.container').append('<div class="tag-item"><p>' + tag + '</p><div class="remove"><div class="cross"><div class="cross-one"></div><div class="cross-two"></div></div></div></div>')
         fetchImagesByKeyword(tag)
 
+    #play/pause control
     $('.control').on('click', ->
         if playing == true
             $('.control > .play').show()
@@ -113,6 +135,7 @@ $(document).ready ->
 
     )
 
+    #speed control
     $('.slow').on('click', ->
         setSpeed('slow')
     )
@@ -125,6 +148,7 @@ $(document).ready ->
         setSpeed('high')
     )
 
+    #'about' control
     $('#about').on('click', ->
         $('.about').show();
     )
@@ -138,6 +162,18 @@ $(document).ready ->
         event.stopPropagation()
         event.preventDefault()
         if $('.tags-input').val()
+            newTag = $('.tags-input').val()
+            tags.push(newTag)
+            if tags.length == 1
+                imageShowTick = setInterval(addImageIntoDOM, interval)
+            $('.container').append('<div class="tag-item"><p>' + newTag + '</p><div class="remove"><div class="cross"><div class="cross-one"></div><div class="cross-two"></div></div></div></div>')
+            $('.tags-input').val('')
+            fetchImagesByKeyword(newTag)
+    )
+
+    #add new tag with keyboard
+    $('.tags-input').on('keyup', (event) ->
+        if event.which == 13 && $('.tags-input').val()
             newTag = $('.tags-input').val()
             tags.push(newTag)
             if tags.length == 1
