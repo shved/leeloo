@@ -53,12 +53,19 @@ pushImagesIntoQueue = (response, tag) ->
         width = result.width
         height = result.height
         ratio = height / width
-        if (width > ($(window).width() || 800)) && (ratio <= 1)
-            width = 800
-            height = width * ratio
-        else if (height > ($(window).height() || 800))
-            height = 800
-            width = height / ratio
+        if ($(window).width() < 600) || ($(window).height() < 600)
+            maxW = $(window).width()
+            maxH = $(window).height()
+        else
+            maxW = 600
+            maxH = 600
+
+        if (width > maxW) && (ratio <= 1)
+                width = maxW
+                height = width * ratio
+            else if height > 600
+                height = maxH
+                width = height / ratio
 
         imageQueue.push {
             url: result.url
