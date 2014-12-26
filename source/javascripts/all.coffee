@@ -6,12 +6,13 @@ speed could be: slow, normal, high
 ###
 
 speed = 'normal'
-tags = ['небо', 'Кадыров', 'mandelbrot']
+tags = ['туманность', 'Кадыров', 'mandelbrot']
 playing = true
 interval = 2000
+delay = 500
 
 imageQueue = []
-imagesPuff = 20
+imagesPuff = 25
 
 imageShowTick = 0
 
@@ -53,19 +54,19 @@ pushImagesIntoQueue = (response, tag) ->
         width = result.width
         height = result.height
         ratio = height / width
-        if ($(window).width() < 600) || ($(window).height() < 600)
+        if ($(window).width() < 800) || ($(window).height() < 800)
             maxW = $(window).width()
             maxH = $(window).height()
         else
-            maxW = 600
-            maxH = 600
+            maxW = 800
+            maxH = 800
 
         if (width > maxW) && (ratio <= 1)
-                width = maxW
-                height = width * ratio
-            else if height > 600
-                height = maxH
-                width = height / ratio
+            width = maxW
+            height = width * ratio
+        else if height > 800
+            height = maxH
+            width = height / ratio
 
         imageQueue.push {
             url: result.url
@@ -86,7 +87,10 @@ addImageIntoDOM = ->
     $('.image-' + uniqueImageClass).css('top', Math.floor(Math.random() * ($(window).height() - imageQueue[imageIndex].height)))
     $('.image-' + uniqueImageClass).css('width', imageQueue[imageIndex].width)
     $('.image-' + uniqueImageClass).css('height', imageQueue[imageIndex].height)
-    $('.image-' + uniqueImageClass).show()
+    $('.image-' + uniqueImageClass).hide()
+    setTimeout( ->
+        $('.image-' + uniqueImageClass).show()
+    , delay)
     if $('.images-layer > img').length > imagesPuff
         $('.images-layer > img:first').remove()
 
@@ -102,15 +106,15 @@ fetchGoogleImages = (keyword) ->
     reqURL = 'http://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=8&imgsz=large&q=' + keyword + '&safe=off'
     querys = [0, 8, 16, 24]
     $.map(querys, (start) ->
-        $.ajax {
+        $.ajax
             url: reqURL,
             dataType: "jsonp",
             success: (response) ->
                 pushImagesIntoQueue(response, keyword)
-            data: {
+            data:
                     'start': start
-                }
-            })
+
+            )
 
 ###
 main stuff
@@ -134,7 +138,7 @@ $(document).ready ->
             $('.control > .pause').hide()
             playing = false
             clearInterval(imageShowTick)
-        else
+        else if tags.length > 0
             $('.control > .play').hide()
             $('.control > .pause').show()
             playing = true
@@ -173,8 +177,28 @@ $(document).ready ->
             tags.push(newTag)
             if tags.length == 1
                 imageShowTick = setInterval(addImageIntoDOM, interval)
+                $('.control > .play').hide()
+                $('.control > .pause').show()
+                playing = true
             $('.container').append('<div class="tag-item"><p>' + newTag + '</p><div class="remove"><div class="cross"><div class="cross-one"></div><div class="cross-two"></div></div></div></div>')
             $('.tags-input').val('')
+            $('.remove').on('click', ->
+                event.stopPropagation()
+                event.preventDefault()
+                removedTag = $(this).prev().html()
+                index = tags.indexOf(removedTag)
+                if index > -1
+                    tags.splice(index, 1)
+                    if tags.length < 1
+                        clearInterval(imageShowTick)
+                        imageQueue = []
+                    else
+                        imageQueue = $.grep(imageQueue, (image) ->
+                            return image.tag != removedTag
+                            )
+                        imageQueue.shuffle()
+                $(this).parent().remove()
+            )
             fetchImagesByKeyword(newTag)
     )
 
@@ -185,8 +209,28 @@ $(document).ready ->
             tags.push(newTag)
             if tags.length == 1
                 imageShowTick = setInterval(addImageIntoDOM, interval)
+                $('.control > .play').hide()
+                $('.control > .pause').show()
+                playing = true
             $('.container').append('<div class="tag-item"><p>' + newTag + '</p><div class="remove"><div class="cross"><div class="cross-one"></div><div class="cross-two"></div></div></div></div>')
             $('.tags-input').val('')
+            $('.remove').on('click', ->
+                event.stopPropagation()
+                event.preventDefault()
+                removedTag = $(this).prev().html()
+                index = tags.indexOf(removedTag)
+                if index > -1
+                    tags.splice(index, 1)
+                    if tags.length < 1
+                        clearInterval(imageShowTick)
+                        imageQueue = []
+                    else
+                        imageQueue = $.grep(imageQueue, (image) ->
+                            return image.tag != removedTag
+                            )
+                        imageQueue.shuffle()
+                $(this).parent().remove()
+            )
             fetchImagesByKeyword(newTag)
     )
 
@@ -200,7 +244,11 @@ $(document).ready ->
             tags.splice(index, 1)
             if tags.length < 1
                 clearInterval(imageShowTick)
+                $('.control > .play').show()
+                $('.control > .pause').hide()
+                playing = false
                 imageQueue = []
+                tags = []
             else
                 imageQueue = $.grep(imageQueue, (image) ->
                     return image.tag != removedTag
