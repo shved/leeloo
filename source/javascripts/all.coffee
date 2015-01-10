@@ -33,6 +33,7 @@ Array.prototype.shuffle = ->
 
 fetchImagesByKeyword = (keyword) ->
   fetchGoogleImages(keyword)
+  fetchInstagramImages(keyword)
 
 setSpeed = (newSpeed) ->
   if newSpeed == 'slow' or 'normal' or 'high'
@@ -48,32 +49,46 @@ setSpeed = (newSpeed) ->
     speed = newSpeed
 
 
-pushImagesIntoQueue = (response, tag) ->
-  for result in response.responseData.results
-    width = result.width
-    height = result.height
-    ratio = height / width
-    if ($(window).width() < 800) || ($(window).height() < 800)
-      maxW = $(window).width()
-      maxH = $(window).height()
-    else
-      maxW = 800
-      maxH = 800
+pushGoogleImagesIntoQueue = (response, tag) ->
+  if response.responseData.results[0].url
+    for result in response.responseData.results
+      width = result.width
+      height = result.height
+      ratio = height / width
+      if ($(window).width() < 800) || ($(window).height() < 800)
+        maxW = $(window).width()
+        maxH = $(window).height()
+      else
+        maxW = 800
+        maxH = 800
 
-    if (width > maxW) && (ratio <= 1)
-      width = maxW
-      height = width * ratio
-    else if height > 800
-      height = maxH
-      width = height / ratio
+      if (width > maxW) && (ratio <= 1)
+        width = maxW
+        height = width * ratio
+      else if height > 800
+        height = maxH
+        width = height / ratio
 
-    imageQueue.push {
-      url: result.url
-      width: width
-      height: height
-      tag: tag
-    }
+      imageQueue.push {
+        url: result.url
+        width: width
+        height: height
+        tag: tag
+      }
   imageQueue.shuffle()
+  console.log(tag, imageQueue)
+
+pushInstImagesIntoQueue = (response, hashTag) ->
+  if response.data[0].images.standard_resolution.url
+    for post in response.data
+      imageQueue.push {
+        url: post.images.standard_resolution.url
+        width: 612
+        height: 612
+        tag: hashTag
+      }
+  imageQueue.shuffle()
+  console.log(hashTag, imageQueue)
 
 
 addImageIntoDOM = ->
@@ -89,7 +104,7 @@ addImageIntoDOM = ->
   $('.image-' + uniqueImageClass).hide()
   setTimeout( ->
     $('.image-' + uniqueImageClass).show()
-    , delay)
+  , delay)
   if $('.images-layer > img').length > imagesPuff
     $('.images-layer > img:first').remove()
 
@@ -98,20 +113,35 @@ ajax requests stuff
 ###
 
 ###
-google image search
+google request
 ###
 
 fetchGoogleImages = (keyword) ->
-  reqURL = 'http://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=8&imgsz=large&q=' + keyword + '&safe=off'
+  reqURL = "http://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=8&imgsz=large&q=#{ keyword }&safe=off"
   queries = [0, 8, 16, 24]
   $.map queries, (start) ->
     $.ajax
       url: reqURL
-      dataType: "jsonp"
+      dataType: 'jsonp'
       success: (response) ->
-        pushImagesIntoQueue(response, keyword)
+        pushGoogleImagesIntoQueue(response, keyword)
       data:
         'start': start
+
+###
+instagram request
+###
+
+fetchInstagramImages = (hashTag) ->
+  clientId = '80603d73bec0476b828b34203b234dce'
+  reqURL = "https://api.instagram.com/v1/tags/#{ hashTag }/media/recent?client_id=#{ clientId }"
+  $.ajax
+    url: reqURL
+    dataType: 'jsonp'
+    success: (response) ->
+      pushInstImagesIntoQueue(response, hashTag)
+    data:
+      count: 6
 
 ###
 main stuff
@@ -125,7 +155,7 @@ $(document).ready ->
   setSpeed(speed)
 
   for tag in tags
-    $('.container').append('<div class="tag-item"><p>' + tag + '</p><div class="remove"><div class="cross"><div class="cross-one"></div><div class="cross-two"></div></div></div></div>')
+    $('.container').append("<div class=\"tag-item\"><p>#{ tag }</p><div class=\"remove\"><div class=\"cross\"><div class=\"cross-one\"></div><div class=\"cross-two\"></div></div></div></div>")
     fetchImagesByKeyword(tag)
 
   #play/pause control
@@ -151,7 +181,7 @@ $(document).ready ->
       setSpeed('normal')
     )
 
-    $('.high').on('click', ->
+  $('.high').on('click', ->
       setSpeed('high')
     )
 
@@ -168,34 +198,34 @@ $(document).ready ->
   $('.add').on('click', (event) ->
     event.stopPropagation()
     event.preventDefault()
-      if $('.tags-input').val()
-        newTag = $('.tags-input').val()
-        tags.push(newTag)
-        if tags.length == 1
-          imageShowTick = setInterval(addImageIntoDOM, interval)
-          $('.control > .play').hide()
-          $('.control > .pause').show()
-          playing = true
-        $('.container').append('<div class="tag-item"><p>' + newTag + '</p><div class="remove"><div class="cross"><div class="cross-one"></div><div class="cross-two"></div></div></div></div>')
-        $('.tags-input').val('')
-        $('.remove').on('click', ->
-          event.stopPropagation()
-          event.preventDefault()
-          removedTag = $(this).prev().html()
-          index = tags.indexOf(removedTag)
-            if index > -1
-              tags.splice(index, 1)
-              if tags.length < 1
-                clearInterval(imageShowTick)
-                imageQueue = []
-              else
-                imageQueue = $.grep(imageQueue, (image) ->
-                    return image.tag != removedTag
-                    )
-                imageQueue.shuffle()
-          $(this).parent().remove()
-        )
-        fetchImagesByKeyword(newTag)
+    if $('.tags-input').val()
+      newTag = $('.tags-input').val()
+      tags.push(newTag)
+      if tags.length == 1
+        imageShowTick = setInterval(addImageIntoDOM, interval)
+        $('.control > .play').hide()
+        $('.control > .pause').show()
+        playing = true
+      $('.container').append("<div class=\"tag-item\"><p>#{ newTag }</p><div class=\"remove\"><div class=\"cross\"><div class=\"cross-one\"></div><div class=\"cross-two\"></div></div></div></div>")
+      $('.tags-input').val('')
+      $('.remove').on('click', ->
+        event.stopPropagation()
+        event.preventDefault()
+        removedTag = $(this).prev().html()
+        index = tags.indexOf(removedTag)
+        if index > -1
+          tags.splice(index, 1)
+          if tags.length < 1
+            clearInterval(imageShowTick)
+            imageQueue = []
+          else
+            imageQueue = $.grep(imageQueue, (image) ->
+                return image.tag != removedTag
+                )
+            imageQueue.shuffle()
+        $(this).parent().remove()
+      )
+      fetchImagesByKeyword(newTag)
   )
 
   #add new tag with keyboard
@@ -208,7 +238,7 @@ $(document).ready ->
         $('.control > .play').hide()
         $('.control > .pause').show()
         playing = true
-      $('.container').append('<div class="tag-item"><p>' + newTag + '</p><div class="remove"><div class="cross"><div class="cross-one"></div><div class="cross-two"></div></div></div></div>')
+      $('.container').append("<div class=\"tag-item\"><p>#{ newTag }</p><div class=\"remove\"><div class=\"cross\"><div class=\"cross-one\"></div><div class=\"cross-two\"></div></div></div></div>")
       $('.tags-input').val('')
       $('.remove').on('click', ->
         event.stopPropagation()
