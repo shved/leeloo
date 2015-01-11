@@ -7,7 +7,7 @@ speed could be: slow, normal, high
 ###
 
 speed = 'normal'
-tags = ['Кадыров', 'mandelbrot']
+tags = ['mandelbrot', 'webpunk', 'Кадыров']
 playing = true
 interval = 2000
 delay = 500
