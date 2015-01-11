@@ -1,13 +1,13 @@
-//= require 'jquery'
-//= require 'idle'
+//= require "jquery"
+//= require "idle"
 
 ###
 initial state
 speed could be: slow, normal, high
 ###
 
-speed = 'normal'
-tags = ['mandelbrot', 'webpunk', 'Кадыров']
+speed = "normal"
+tags = ["mandelbrot", "webpunk", "Кадыров"]
 playing = true
 interval = 2000
 delay = 500
@@ -38,28 +38,28 @@ fetchImagesByKeyword = (keyword) ->
   fetchInstagramImages keyword
 
 setSpeed = (newSpeed) ->
-  if newSpeed == 'slow' or 'normal' or 'high'
-    $('.speed-control .selected').removeClass('selected')
-    $('.speed-control').find('.' + newSpeed).addClass('selected')
+  if newSpeed == "slow" or "normal" or "high"
+    $(".speed-control .selected").removeClass("selected")
+    $(".speed-control").find("." + newSpeed).addClass("selected")
     switch newSpeed
-      when 'slow' then interval = 4000
-      when 'normal' then interval = 2000
-      when 'high' then interval = 1000
+      when "slow" then interval = 4000
+      when "normal" then interval = 2000
+      when "high" then interval = 1000
       else interval = 2000
     clearInterval imageShowTick
     imageShowTick = setInterval addImageIntoDOM, interval
     speed = newSpeed
 
 addTag = ->
-  tagName = $('.tags-input').val()
+  tagName = $(".tags-input").val()
   tags.push tagName
   fetchImagesByKeyword tagName
-  $('.container').append("<div class=\"tag-item\"><p>#{ tagName }</p><div class=\"remove\"><div class=\"cross\"><div class=\"cross-one\"></div><div class=\"cross-two\"></div></div></div></div>")
-  $('.tags-input').val('')
+  $(".container").append("<div class=\"tag-item\"><p>#{ tagName }</p><div class=\"remove\"><div class=\"cross\"><div class=\"cross-one\"></div><div class=\"cross-two\"></div></div></div></div>")
+  $(".tags-input").val("")
   if tags.length == 1
     imageShowTick = setInterval addImageIntoDOM, interval
-    $('.control > .play').hide()
-    $('.control > .pause').show()
+    $(".control > .play").hide()
+    $(".control > .pause").show()
     playing = true
 
 removeTag = (tagName) ->
@@ -68,8 +68,8 @@ removeTag = (tagName) ->
     tags.splice index, 1
     if tags.length < 1
       clearInterval imageShowTick
-      $('.control > .play').show()
-      $('.control > .pause').hide()
+      $(".control > .play").show()
+      $(".control > .pause").hide()
       playing = false
       imageQueue = []
       tags = []
@@ -80,15 +80,15 @@ removeTag = (tagName) ->
       imageQueue.shuffle()
 
 document.onIdle = ->
-  $('.control').fadeOut(600, ->
+  $(".control").fadeOut(600, ->
   )
 
 document.onBack = ->
-  $('.control').fadeIn(600, ->
+  $(".control").fadeIn(600, ->
   )
 
 jQuery.fn.flash = ->
-  this.css('box-shadow', '0 0 20px rgba(255, 255, 255, 1)')
+  this.css("box-shadow", "0 0 20px rgba(255, 255, 255, 1)")
 
 
 pushGoogleImagesIntoQueue = (response, tag) ->
@@ -136,19 +136,19 @@ addImageIntoDOM = ->
   imageIndex = uniqueImageClass % imageQueue.length
   if imageIndex == 0
     imageQueue.shuffle()
-  $('.images-layer').append('<img class="image image-' + uniqueImageClass + '" src="' + imageQueue[imageIndex].url + '"/>')
+  $(".images-layer").append("<img class="image image-" + uniqueImageClass + "" src="" + imageQueue[imageIndex].url + ""/>")
   image = $(".image-#{ uniqueImageClass }")
   image.css({
-    'left' : Math.floor(Math.random() * ($(window).width() - imageQueue[imageIndex].width))
-    'top' : Math.floor(Math.random() * ($(window).height() - imageQueue[imageIndex].height))
-    'width' : imageQueue[imageIndex].width
-    'height' : imageQueue[imageIndex].height
+    "left" : Math.floor(Math.random() * ($(window).width() - imageQueue[imageIndex].width))
+    "top" : Math.floor(Math.random() * ($(window).height() - imageQueue[imageIndex].height))
+    "width" : imageQueue[imageIndex].width
+    "height" : imageQueue[imageIndex].height
     }).hide()
   setTimeout( ->
-    $('.image-' + uniqueImageClass).show()
+    $(".image-" + uniqueImageClass).show()
   , delay)
-  if $('.images-layer > img').length > imagesPuff
-    $('.images-layer > img:first').remove()
+  if $(".images-layer > img").length > imagesPuff
+    $(".images-layer > img:first").remove()
 
 ###
 ajax requests stuff
@@ -164,22 +164,22 @@ fetchGoogleImages = (keyword) ->
   $.map queries, (start) ->
     $.ajax
       url: reqURL
-      dataType: 'jsonp'
+      dataType: "jsonp"
       success: (response) ->
         pushGoogleImagesIntoQueue response, keyword
       data:
-        'start': start
+        "start": start
 
 ###
 instagram request
 ###
 
 fetchInstagramImages = (hashTag) ->
-  clientId = '80603d73bec0476b828b34203b234dce'
+  clientId = "80603d73bec0476b828b34203b234dce"
   reqURL = "https://api.instagram.com/v1/tags/#{ hashTag }/media/recent?client_id=#{ clientId }"
   $.ajax
     url: reqURL
-    dataType: 'jsonp'
+    dataType: "jsonp"
     success: (response) ->
       pushInstImagesIntoQueue response, hashTag
     data:
@@ -194,61 +194,61 @@ $(document).ready ->
   setIdleTimeout idleTimeout
 
   if playing
-    $('.control > .play').hide()
+    $(".control > .play").hide()
     imageShowTick = setInterval addImageIntoDOM, interval
 
   setSpeed speed
 
   for tag in tags
-    $('.container').append("<div class=\"tag-item\"><p>#{ tag }</p><div class=\"remove\"><div class=\"cross\"><div class=\"cross-one\"></div><div class=\"cross-two\"></div></div></div></div>")
+    $(".container").append("<div class=\"tag-item\"><p>#{ tag }</p><div class=\"remove\"><div class=\"cross\"><div class=\"cross-one\"></div><div class=\"cross-two\"></div></div></div></div>")
     fetchImagesByKeyword tag
 
   #play/pause control
-  $('.control').on('click', ->
+  $(".control").on("click", ->
     if playing == true
-      $('.control > .play').show()
-      $('.control > .pause').hide()
+      $(".control > .play").show()
+      $(".control > .pause").hide()
       playing = false
       clearInterval imageShowTick
     else if tags.length > 0
-      $('.control > .play').hide()
-      $('.control > .pause').show()
+      $(".control > .play").hide()
+      $(".control > .pause").show()
       playing = true
       imageShowTick = setInterval addImageIntoDOM, interval
     else if tags.length < 1
-      $('.tags-input').css('background', 'red')
+      $(".tags-input").css("background", "red")
       setTimeout( ->
-        $('.tags-input').css('background', 'blue')
+        $(".tags-input").css("background", "blue")
       , 100)
     )
 
   #speed control
-  $('.slow').on('click', ->
-    setSpeed 'slow'
+  $(".slow").on("click", ->
+    setSpeed "slow"
   )
 
-  $('.normal').on('click', ->
-      setSpeed 'normal'
+  $(".normal").on("click", ->
+      setSpeed "normal"
     )
 
-  $('.high').on('click', ->
-      setSpeed 'high'
+  $(".high").on("click", ->
+      setSpeed "high"
     )
 
-  #'about' control
-  $('#about').on('click', ->
-    $('.about').show();
+  #"about" control
+  $("#about").on("click", ->
+    $(".about").show();
   )
 
-  $('.about').on('click', '.close-about', ->
-    $('.about').hide();
+  $(".about").on("click", ".close-about", ->
+    $(".about").hide();
   )
 
   #add new tag
-  $('.add').on('click', (event) ->
-    if $('.tags-input').val()
+  $(".add").on("click", (event) ->
+    if $(".tags-input").val()
       addTag()
-      $('.remove').on('click', ->
+      $(".remove").on("click", ->
         tagToRemove = $(this).prev().html()
         removeTag tagToRemove
         $(this).parent().remove()
@@ -256,10 +256,10 @@ $(document).ready ->
   )
 
   #add new tag with keyboard
-  $('.tags-input').on('keyup', (event) ->
-    if event.which == 13 && $('.tags-input').val()
+  $(".tags-input").on("keyup", (event) ->
+    if event.which == 13 && $(".tags-input").val()
       addTag()
-      $('.remove').on('click', ->
+      $(".remove").on("click", ->
         tagToRemove = $(this).prev().html()
         removeTag tagToRemove
         $(this).parent().remove()
@@ -267,7 +267,7 @@ $(document).ready ->
     )
 
   #remove tag
-  $('.remove').on('click', ->
+  $(".remove").on("click", ->
     tagToRemove = $(this).prev().html()
     removeTag tagToRemove
     $(this).parent().remove()
