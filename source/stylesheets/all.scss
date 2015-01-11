@@ -36,6 +36,11 @@ body {
   @extend %hn-regular;
   background: gray;
   overflow: hidden;
+  -webkit-user-select: none; /* Chrome/Safari */
+     -moz-user-select: none; /* Firefox */
+      -ms-user-select: none; /* IE10+ */
+       -o-user-select: none;
+          user-select: none;
 }
 
 a {
@@ -105,10 +110,15 @@ a {
   width: $input-width;
   display: inline-block;
   border: none;
+  outline: none;
   background: blue;
   font-style: italic;
   font-size: 16pt;
   color: white;
+  -webkit-transition: all .2s ease-in-out;
+     -moz-transition: all .2s ease-in-out;
+       -o-transition: all .2s ease-in-out;
+          transition: all .2s ease-in-out;
   @include round-bords($ctrls-rad);
   @extend %hn-ultra;
   &:focus {
