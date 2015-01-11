@@ -1,4 +1,5 @@
 //= require 'jquery'
+//= require 'idle'
 
 ###
 initial state
@@ -11,11 +12,12 @@ playing = true
 interval = 2000
 delay = 500
 
+idleTimeout = 2500
+
 imageQueue = []
-imagesPuff = 25
+imagesPuff = 20
 
-imageShowTick = 0
-
+imageShowTick =0
 uniqueImageClass = 0
 
 ###
@@ -48,6 +50,13 @@ setSpeed = (newSpeed) ->
     imageShowTick = setInterval(addImageIntoDOM, interval)
     speed = newSpeed
 
+document.onIdle = ->
+  $('.control').fadeOut(600, ->
+  )
+
+document.onBack = ->
+  $('.control').fadeIn(600, ->
+  )
 
 pushGoogleImagesIntoQueue = (response, tag) ->
   if response.responseData.results[0].url
@@ -76,7 +85,6 @@ pushGoogleImagesIntoQueue = (response, tag) ->
         tag: tag
       }
   imageQueue.shuffle()
-  console.log(tag, imageQueue)
 
 pushInstImagesIntoQueue = (response, hashTag) ->
   if response.data[0].images.standard_resolution.url
@@ -88,7 +96,6 @@ pushInstImagesIntoQueue = (response, hashTag) ->
         tag: hashTag
       }
   imageQueue.shuffle()
-  console.log(hashTag, imageQueue)
 
 
 addImageIntoDOM = ->
@@ -148,11 +155,13 @@ main stuff
 ###
 $(document).ready ->
 
+  setIdleTimeout idleTimeout
+
   if playing
     $('.control > .play').hide()
-    imageShowTick = setInterval(addImageIntoDOM, interval)
+    imageShowTick = setInterval addImageIntoDOM, interval
 
-  setSpeed(speed)
+  setSpeed speed
 
   for tag in tags
     $('.container').append("<div class=\"tag-item\"><p>#{ tag }</p><div class=\"remove\"><div class=\"cross\"><div class=\"cross-one\"></div><div class=\"cross-two\"></div></div></div></div>")
@@ -209,8 +218,6 @@ $(document).ready ->
       $('.container').append("<div class=\"tag-item\"><p>#{ newTag }</p><div class=\"remove\"><div class=\"cross\"><div class=\"cross-one\"></div><div class=\"cross-two\"></div></div></div></div>")
       $('.tags-input').val('')
       $('.remove').on('click', ->
-        event.stopPropagation()
-        event.preventDefault()
         removedTag = $(this).prev().html()
         index = tags.indexOf(removedTag)
         if index > -1
@@ -241,8 +248,6 @@ $(document).ready ->
       $('.container').append("<div class=\"tag-item\"><p>#{ newTag }</p><div class=\"remove\"><div class=\"cross\"><div class=\"cross-one\"></div><div class=\"cross-two\"></div></div></div></div>")
       $('.tags-input').val('')
       $('.remove').on('click', ->
-        event.stopPropagation()
-        event.preventDefault()
         removedTag = $(this).prev().html()
         index = tags.indexOf(removedTag)
         if index > -1
@@ -262,8 +267,6 @@ $(document).ready ->
 
   #remove tag
   $('.remove').on('click', ->
-    event.stopPropagation()
-    event.preventDefault()
     removedTag = $(this).prev().html()
     index = tags.indexOf(removedTag)
     if index > -1
