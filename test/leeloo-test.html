@@ -1,0 +1,18 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Mocha Tests</title>
+    <link rel="stylesheet" href="mocha.css" />
+  </head>
+  <body>
+    <div id="mocha"><p><a href=".">Index</a></p></div>
+    <script src="mocha.js"></script>
+    <script src="chai.js"></script>
+    <script src="../source/javascripts/all.coffee"></script>
+    <script>mocha.setup('bdd')</script>
+    <script src="leeloo-test.coffee"></script>
+    <script>
+      mocha.run();
+    </script>
+  </body>
+</html>
