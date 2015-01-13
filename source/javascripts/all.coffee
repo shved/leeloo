@@ -2,16 +2,19 @@
 #//= require "idle"
 
 ( ->
+
+  class Leeloo
+    constructor: (speed) ->
+      @speed = speed
+      @bool = true
+
+    stop: ->
+      return true
+
   ###
   initial state
   speed could be: "slow", "normal", "high"
   ###
-
-  Class Leeloo
-    constructor: (speed)
-      @speed = speed
-
-  leeloo = new Leeloo "normal"
 
   speed = "normal"
   tags = ["mandelbrot", "webpunk", "Кадыров"]
