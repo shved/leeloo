@@ -1,5 +1,4 @@
 ###
-should = require("chai").should()
 
 { speed,
   tags,
@@ -23,32 +22,21 @@ should = require("chai").should()
   fetchInstagramImages
   } = require "../source/javascripts/all.coffee"
 
-speed.should.be.a('string')
-speed.should.be.equal('normal')
 ###
 
-expect = chai.expect
+#should = require("chai").should()
+should = chai.should()
 
-{ speed,
-  tags,
-  playing,
-  interval,
-  delay,
-  idleTimeout,
-  imageQueue,
-  imagesPuff,
-  imageShowTick,
-  uniqueImageClass,
-  shuffle,
-  fetchImagesByKeyword,
-  setSpeed,
-  addTag,
-  removeTag,
-  pushGoogleImagesIntoQueue,
-  pushInstImagesIntoQueue,
-  addImageIntoDOM,
-  fetchGoogleImages,
-  fetchInstagramImages
-  } = require "../source/javascripts/all.coffee"
+Leeloo = require "../source/javascripts/all.coffee"
 
-expect(speed).to.be.a("string")
+leeloo = new Leeloo('normal')
+
+describe 'Leeloo', ->
+  describe 'constructor', ->
+    it 'should work with should' ->
+      leeloo.speed.should.be.a('string')
+
+describe 'Initial State', ->
+  describe 'speed', ->
+    it 'should be a string' ->
+      speed.should.be.a('string')

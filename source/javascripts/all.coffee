@@ -7,6 +7,12 @@
   speed could be: "slow", "normal", "high"
   ###
 
+  Class Leeloo
+    constructor: (speed)
+      @speed = speed
+
+  leeloo = new Leeloo "normal"
+
   speed = "normal"
   tags = ["mandelbrot", "webpunk", "Кадыров"]
   playing = true
