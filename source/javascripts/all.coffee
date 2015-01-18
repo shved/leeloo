@@ -3,14 +3,6 @@
 
 ( ->
 
-  class Leeloo
-    constructor: (speed) ->
-      @speed = speed
-      @bool = true
-
-    stop: ->
-      return true
-
   ###
   initial state
   speed could be: "slow", "normal", "high"
