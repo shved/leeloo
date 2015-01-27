@@ -43,12 +43,6 @@ body {
           user-select: none;
 }
 
-a {
-  color: red;
-  text-decoration: none;
-  border-bottom: 2px solid red;
-}
-
 .image {
   z-index: -1;
   position: absolute;
@@ -256,12 +250,27 @@ a {
   }
 }
 
-#about {
-  cursor: pointer;
+#logo {
+  font-family: "PT Mono", Arial;
   font-size: 22pt;
+  text-decoration: none;
+  color: black;
+  cursor: pointer;
+  padding: 0;
   position: absolute;
   bottom: 60px;
   left: 60px;
+  -webkit-transform: rotate(180deg); /* Chrome, Safari, Opera */
+      -ms-transform: rotate(180deg); /* IE 9 */
+          transform: rotate(180deg);
+
+}
+
+.fb-like {
+  display: inline-block;
+  position: absolute;
+  bottom: 60px;
+  left: 300px;
 }
 
 .about {
