@@ -183,18 +183,6 @@
 
   $(document).ready ->
 
-    #setting up fb sdk
-
-    do (d = document, s = 'script', id = 'facebook-jssdk') ->
-      js = fjs = d.getElementsByTagName(s)[0]
-      if (d.getElementById(id))
-        return
-      else
-        js = d.createElement(s)
-        js.id = id
-        js.src = "http://connect.facebook.net/en_GB/sdk.js#xfbml=1&appId=1234567891234567&version=v2.0"
-        fjs.parentNode.insertBefore(js, fjs)
-
     #setting up initial state
 
     setIdleTimeout idleTimeout
