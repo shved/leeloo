@@ -142,6 +142,12 @@
     if $(".images-layer > img").length > imagesPuff
       $(".images-layer > img:first").remove()
 
+  tagsInputBlink = ->
+    $(".tags-input").css("background", "red")
+    setTimeout( ->
+      $(".tags-input").css("background", "blue")
+    , 100)
+
   ###
   ajax requests stuff
   ###
@@ -212,10 +218,7 @@
         playing = true
         imageShowTick = setInterval addImageIntoDOM, interval
       else if tags.length < 1
-        $(".tags-input").css("background", "red")
-        setTimeout( ->
-          $(".tags-input").css("background", "blue")
-        , 100)
+        tagsInputBlink()
       )
 
     #speed control
@@ -231,9 +234,35 @@
         setSpeed "high"
       )
 
-    #"about" control
-    $("#about").on("click", ->
+    #logo control
+    $("#logo").on("click", ->
       $(".about").show();
+    )
+
+    $("#logo").hover( ->
+      $("#logo").html("i").css
+        "-webkit-transform": "rotate(0deg)"
+        "-ms-transform": "rotate(0deg)"
+        "transform": "rotate(0deg)"
+        "font-family": "\"Georgia\", serif"
+        "font-size": "120pt"
+        "font-style": "italic"
+        "font-weight": "900"
+        "color": "red"
+        "bottom": "30px"
+        "left": "90px"
+    , ->
+      $("#logo").html("007337").css
+        "-webkit-transform": "rotate(180deg)"
+        "-ms-transform": "rotate(180deg)"
+        "transform": "rotate(180deg)"
+        "font-family": "\"PT Mono\", sans-serif"
+        "font-size": "22pt"
+        "font-style": "bold"
+        "font-weight": "500"
+        "color": "black"
+        "bottom": "60px"
+        "left": "60px"
     )
 
     $(".about").on("click", ".close-about", ->
@@ -249,6 +278,8 @@
           removeTag tagToRemove
           $(this).remove()
         )
+      else
+        tagsInputBlink()
     )
 
     #adding new tag with keyboard
@@ -260,6 +291,8 @@
           removeTag tagToRemove
           $(this).remove()
         )
+      else if !$(".tags-input").val()
+        tagsInputBlink()
       )
 
     #removing tag

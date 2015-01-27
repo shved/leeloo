@@ -169,7 +169,6 @@ body {
   flex-direction: raw;
   -webkit-flex-wrap: wrap;
   flex-wrap: wrap;
-
   z-index: 0;
   position: absolute;
   top: 58px;
@@ -178,7 +177,7 @@ body {
   .tag-item {
     -webkit-flex: wrap;
     flex: wrap;
-    cursor: pointer;
+    cursor: url(../images/cur_X.png) 23 23, not-allowed;
     height: $ctrls-height;
     border: none;
     background: blue;
@@ -265,14 +264,13 @@ body {
   -webkit-transform: rotate(180deg); /* Chrome, Safari, Opera */
       -ms-transform: rotate(180deg); /* IE 9 */
           transform: rotate(180deg);
-
 }
 
 iframe {
   display: inline-block;
   position: absolute;
   bottom: 65px;
-  left: 220px;
+  left: 200px;
 }
 
 .about {
