@@ -252,11 +252,13 @@ body {
 
 #logo {
   font-family: "PT Mono", Arial;
+  font-style: bold;
   font-size: 22pt;
   text-decoration: none;
   color: black;
   cursor: pointer;
   padding: 0;
+  margin: 0;
   position: absolute;
   bottom: 60px;
   left: 60px;
@@ -266,11 +268,11 @@ body {
 
 }
 
-.fb-like {
+iframe {
   display: inline-block;
   position: absolute;
-  bottom: 60px;
-  left: 300px;
+  bottom: 65px;
+  left: 220px;
 }
 
 .about {

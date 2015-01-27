@@ -123,7 +123,6 @@
         }
     imageQueue.shuffle()
 
-
   addImageIntoDOM = ->
     uniqueImageClass += 1
     imageIndex = uniqueImageClass % imageQueue.length
