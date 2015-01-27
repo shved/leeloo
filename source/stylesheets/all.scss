@@ -184,7 +184,6 @@ a {
   .tag-item {
     -webkit-flex: wrap;
     flex: wrap;
-
     cursor: pointer;
     height: $ctrls-height;
     border: none;
@@ -209,42 +208,6 @@ a {
       vertical-align: middle;
       line-height: 130%;
     }
-    .remove {
-      height: 29px;
-      width: 29px;
-      background: #a0a0ff;
-      display: inline-block;
-      position: relative;
-      top: 2px;
-      left: 17px;
-      vertical-align: middle;
-      @include round-bords($ctrls-rad - 4px);
-      .cross {
-        background: none;
-        border: none;
-        margin: 0;
-        .cross-one {
-          height: 17px;
-          width: 3px;
-          background: blue;
-          position: absolute;
-          top: 6px;
-          left: 14px;
-          transform: rotate(45deg);
-          -webkit-transform: rotate(45deg);
-        }
-        .cross-two {
-          height: 3px;
-          width: 17px;
-          background: blue;
-          position: absolute;
-          top: 13px;
-          left: 7px;
-          transform: rotate(45deg);
-          -webkit-transform: rotate(45deg);
-        }
-      }
-    }
   }
 }
 
@@ -265,6 +228,8 @@ a {
     position: relative;
     left: 75px;
     top: 50px;
+    width: 100px;
+    height: 142px;
     .pause-one {
       height: 142px;
       width: 30px;

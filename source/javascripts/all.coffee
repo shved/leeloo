@@ -52,11 +52,14 @@
       imageShowTick = setInterval addImageIntoDOM, interval
       speed = newSpeed
 
+  tagHtml = (tagName) ->
+    return "<div class=\"tag-item\"><p>#{ tagName }</p></div>"
+
   addTag = ->
     tagName = $(".tags-input").val()
     tags.push tagName
     fetchImagesByKeyword tagName
-    $(".container").append("<div class=\"tag-item\"><p>#{ tagName }</p><div class=\"remove\"><div class=\"cross\"><div class=\"cross-one\"></div><div class=\"cross-two\"></div></div></div></div>")
+    $(".container").append(tagHtml(tagName))
     $(".tags-input").val("")
     if tags.length == 1
       imageShowTick = setInterval addImageIntoDOM, interval
@@ -192,7 +195,7 @@
     setSpeed speed
 
     for tag in tags
-      $(".container").append("<div class=\"tag-item\"><p>#{ tag }</p><div class=\"remove\"><div class=\"cross\"><div class=\"cross-one\"></div><div class=\"cross-two\"></div></div></div></div>")
+      $(".container").append(tagHtml(tag))
       fetchImagesByKeyword tag
 
     #setting up all event handlers
@@ -253,17 +256,17 @@
     $(".tags-input").on("keyup", (event) ->
       if event.which == 13 && $(".tags-input").val()
         addTag()
-        $(".remove").on("click", ->
-          tagToRemove = $(this).prev().html()
+        $(".tag-item").on("click", ->
+          tagToRemove = $(this).children().first().html()
           removeTag tagToRemove
-          $(this).parent().remove()
+          $(this).remove()
         )
       )
 
     #removing tag
-    $(".remove").on("click", ->
-      tagToRemove = $(this).prev().html()
+    $(".tag-item").on("click", ->
+      tagToRemove = $(this).children().first().html()
       removeTag tagToRemove
-      $(this).parent().remove()
+      $(this).remove()
     )
 )()
