@@ -177,7 +177,7 @@ body {
   .tag-item {
     -webkit-flex: wrap;
     flex: wrap;
-    cursor: url(../images/cur_X.png) 23 23, not-allowed;
+    cursor: url(image-path('cur_X.png')) 23 23, not-allowed;
     height: $ctrls-height;
     border: none;
     background: blue;
