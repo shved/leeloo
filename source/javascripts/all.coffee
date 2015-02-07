@@ -52,6 +52,14 @@
       imageShowTick = setInterval addImageIntoDOM, interval
       speed = newSpeed
 
+  document.onIdle = ->
+    $(".control").fadeOut(500, ->
+    )
+
+  document.onBack = ->
+    $(".control").fadeIn(500, ->
+    )
+
   tagHtml = (tagName) ->
     return "<div class=\"tag-item\"><p>#{ tagName }</p></div>"
 
