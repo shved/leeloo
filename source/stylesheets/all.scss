@@ -1,10 +1,19 @@
 @charset "utf-8";
 
-@font-face("HelveticaNeueRegular", font-files(font-path("HelveticaNeue.ttf")));
+@font-face {
+  font-family: HelveticaNeueRegular;
+  src: url(font-path("HelveticaNeue.ttf"));
+}
 
-@font-face("HelveticaNeueThin", font-files(font-path("HelveticaNeueLight.ttf")));
+@font-face {
+  font-family: HelveticaNeueThin;
+  src: url(font-path("HelveticaNeueThin.ttf"));
+}
 
-@font-face("HelveticaNeueUltraLight", font-files(font-path("HelveticaNeueUltraLight.ttf")));
+@font-face {
+  font-family: HelveticaNeueUltraLight;
+  src: url(font-path("HelveticaNeueUltraLight.ttf"));
+}
 
 $ctrls-rad: 17px;
 $ctrls-height: 35px;
@@ -19,19 +28,19 @@ $input-width: 228px;
 }
 
 %hn-regular {
-  font-family: "HelveticaNeueRegular";
+  font-family: HelveticaNeueRegular;
   font-weight: 300;
   font-stretch: normal;
 }
 
 %hn-thin {
-  font-family: "HelveticaNeueThin";
+  font-family: HelveticaNeueThin;
   font-weight: 200;
   font-stretch:normal;
 }
 
 %hn-ultra {
-  font-family: "HelveticaNeueUltraLight";
+  font-family: HelveticaNeueUltraLight;
   font-weight: 100;
   font-stretch:normal;
 }
