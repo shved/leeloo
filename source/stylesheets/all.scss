@@ -1,10 +1,10 @@
 @charset "utf-8";
 
-@include font-face("HelveticaNeueRegular", font-files(font-path("HelveticaNeue.ttf")));
+@font-face("HelveticaNeueRegular", font-files(font-path("HelveticaNeue.ttf")));
 
-@include font-face("HelveticaNeueThin", font-files(font-path("HelveticaNeueLight.ttf")));
+@font-face("HelveticaNeueThin", font-files(font-path("HelveticaNeueLight.ttf")));
 
-@include font-face("HelveticaNeueUltraLight", font-files(font-path("HelveticaNeueUltraLight.ttf")));
+@font-face("HelveticaNeueUltraLight", font-files(font-path("HelveticaNeueUltraLight.ttf")));
 
 $ctrls-rad: 17px;
 $ctrls-height: 35px;
