@@ -1,5 +1,11 @@
 @charset "utf-8";
 
+@include font-face("HelveticaNeueRegular", font-files(font-path("HelveticaNeue.ttf")));
+
+@include font-face("HelveticaNeueThin", font-files(font-path("HelveticaNeueLight.ttf")));
+
+@include font-face("HelveticaNeueUltraLight", font-files(font-path("HelveticaNeueUltraLight.ttf")));
+
 $ctrls-rad: 17px;
 $ctrls-height: 35px;
 $speed-control-width: 288px;
@@ -13,19 +19,19 @@ $input-width: 228px;
 }
 
 %hn-regular {
-  font-family: "HelveticaNeueRegular", "Helvetica Neue Regular", "HelveticaNeueRoman", "HelveticaNeue-Roman", "Helvetica Neue Roman", "TeXGyreHerosRegular", "Helvetica", "Tahoma", "Geneva", Arial, sans-serif;
+  font-family: "HelveticaNeueRegular";
   font-weight: 300;
   font-stretch: normal;
 }
 
 %hn-thin {
-  font-family: "HelveticaNeueThin", "HelveticaNeue-Thin", "Helvetica Neue Thin", "HelveticaNeue", "Helvetica Neue", "TeXGyreHerosRegular", Arial, sans-serif;
+  font-family: "HelveticaNeueThin";
   font-weight: 200;
   font-stretch:normal;
 }
 
 %hn-ultra {
-  font-family: "HelveticaNeueUltraLight", "HelveticaNeue-Ultra-Light", "Helvetica Neue Ultra Light", "HelveticaNeue", "Helvetica Neue", "TeXGyreHerosRegular", Arial, sans-serif;
+  font-family: "HelveticaNeueUltraLight";
   font-weight: 100;
   font-stretch:normal;
 }
@@ -177,7 +183,7 @@ body {
   .tag-item {
     -webkit-flex: wrap;
     flex: wrap;
-    cursor: url(image-path('cur_X.png')) 23 23, not-allowed;
+    cursor: url(image-path("cur_X.png")) 23 23, not-allowed;
     height: $ctrls-height;
     border: none;
     background: blue;
@@ -250,8 +256,11 @@ body {
 }
 
 #logo {
-  font-family: "PT Mono", Arial;
-  font-style: bold;
+  @font-face {
+    font-family: "PT Mono";
+    src: url(font-path("PTM55FT.ttf"));
+    font-style: bold;
+  }
   font-size: 22pt;
   text-decoration: none;
   color: black;
