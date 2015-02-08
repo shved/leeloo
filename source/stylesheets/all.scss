@@ -255,7 +255,7 @@ body {
   font-size: 22pt;
   text-decoration: none;
   color: black;
-  cursor: pointer;
+  cursor: url(image-path("cur_i.png")) 25 25, not-allowed;
   padding: 0;
   margin: 0;
   position: absolute;

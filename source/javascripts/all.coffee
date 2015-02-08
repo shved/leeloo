@@ -247,32 +247,6 @@
       $(".about").show();
     )
 
-    $("#logo").hover( ->
-      $("#logo").html("i").css
-        "-webkit-transform": "rotate(0deg)"
-        "-ms-transform": "rotate(0deg)"
-        "transform": "rotate(0deg)"
-        "font-family": "\"Georgia\", serif"
-        "font-size": "120pt"
-        "font-style": "italic"
-        "font-weight": "900"
-        "color": "red"
-        "bottom": "30px"
-        "left": "90px"
-    , ->
-      $("#logo").html("007337").css
-        "-webkit-transform": "rotate(180deg)"
-        "-ms-transform": "rotate(180deg)"
-        "transform": "rotate(180deg)"
-        "font-family": "\"PT Mono\", sans-serif"
-        "font-size": "22pt"
-        "font-style": "bold"
-        "font-weight": "500"
-        "color": "black"
-        "bottom": "60px"
-        "left": "60px"
-    )
-
     $(".about").on("click", ".close-about", ->
       $(".about").hide();
     )
