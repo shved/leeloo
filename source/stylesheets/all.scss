@@ -1,19 +1,7 @@
 @charset "utf-8";
 
-@font-face {
-  font-family: HelveticaNeueRegular;
-  src: url(font-path("HelveticaNeue.ttf")), format("truetype");
-}
-
-@font-face {
-  font-family: HelveticaNeueThin;
-  src: url(font-path("HelveticaNeueThin.ttf")), format("truetype");
-}
-
-@font-face {
-  font-family: HelveticaNeueUltraLight;
-  src: url(font-path("HelveticaNeueUltraLight.ttf")), format("truetype");
-}
+@import url("http://fonts.googleapis.com/css?family=PT+Mono");
+@import url("http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,400,300&subset=latin,cyrillic");
 
 $ctrls-rad: 17px;
 $ctrls-height: 35px;
@@ -27,28 +15,25 @@ $input-width: 228px;
   border-radius: $rad;
 }
 
-%hn-regular {
-  font-family: HelveticaNeueRegular;
+%os-regular {
+  font-family: "Open Sans", sans-serif;
+  font-weight: 400;
+}
+
+%os-thin {
+  font-family: "Open Sans", sans-serif;
   font-weight: 300;
-  font-stretch: normal;
 }
 
-%hn-thin {
-  font-family: HelveticaNeueThin;
-  font-weight: 200;
-  font-stretch:normal;
-}
-
-%hn-ultra {
-  font-family: HelveticaNeueUltraLight;
-  font-weight: 100;
-  font-stretch:normal;
+%os-thin-italic {
+  font-family: "Open Sans", sans-serif;
+  font-weight: 300;
+  font-style: italic;
 }
 
 body {
   font-size: 16pt;
   margin: $body-margin;
-  @extend %hn-regular;
   background: gray;
   overflow: hidden;
   -webkit-user-select: none; /* Chrome/Safari */
@@ -80,7 +65,7 @@ body {
     color: white;
     font-size: 16pt;
     cursor: pointer;
-    @extend %hn-thin;
+    @extend %os-thin;
     &:focus {
       outline: none;
     }
@@ -91,7 +76,7 @@ body {
       padding: 0 12px 0 12px;
       margin: 1px 4px 0 4px;
       color: red;
-      @extend %hn-regular;
+      @extend %os-regular;
       @include round-bords($ctrls-rad - 3px);
     }
   &.slow {
@@ -129,7 +114,7 @@ body {
        -o-transition: all .2s ease-in-out;
           transition: all .2s ease-in-out;
   @include round-bords($ctrls-rad);
-  @extend %hn-ultra;
+  @extend %os-thin-italic;
   &:focus {
     outline: none;
   }
@@ -202,13 +187,13 @@ body {
     padding: 0 20px 0 20px;
     margin: 2px;
     overflow: hidden;
-    @extend %hn-ultra;
+    @extend %os-thin;
     @include round-bords($ctrls-rad);
     &:focus {
       outline: none;
     }
     p {
-      @extend %hn-ultra;
+      @extend %os-thin;
       display: inline-block;
       text-align: left;
       margin: 5px 0 0 0;
@@ -265,11 +250,9 @@ body {
 }
 
 #logo {
-  @font-face {
-    font-family: "PT Mono";
-    src: url(font-path("PTM55FT.ttf"));
-    font-style: bold;
-  }
+  font-family: "PT Mono";
+  font-style: bold;
+  font-weight: 600;
   font-size: 22pt;
   text-decoration: none;
   color: black;
@@ -301,7 +284,7 @@ iframe {
   z-index: 1;
   display: none;
   p {
-    @extend %hn-regular;
+    @extend %os-regular;
     color: white;
     margin: 200px auto;
     width: 60%;
