@@ -2,17 +2,17 @@
 
 @font-face {
   font-family: HelveticaNeueRegular;
-  src: url(font-path("HelveticaNeue.ttf"));
+  src: url(font-path("HelveticaNeue.ttf")), format("truetype");
 }
 
 @font-face {
   font-family: HelveticaNeueThin;
-  src: url(font-path("HelveticaNeueThin.ttf"));
+  src: url(font-path("HelveticaNeueThin.ttf")), format("truetype");
 }
 
 @font-face {
   font-family: HelveticaNeueUltraLight;
-  src: url(font-path("HelveticaNeueUltraLight.ttf"));
+  src: url(font-path("HelveticaNeueUltraLight.ttf")), format("truetype");
 }
 
 $ctrls-rad: 17px;
