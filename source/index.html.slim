@@ -25,13 +25,32 @@ input.tags-input type="text" placeholder="keyword"
 iframe src="//www.facebook.com/plugins/like.php?href=http%3A%2F%2Fleeloo.shvedchenko.ru&width&layout=button_count&action=like&show_faces=false&share=true&height=21" scrolling="no" frameborder="0" style="border:none; overflow:hidden; height:21px;" allowTransparency="true"
 
 .about
-  .close-about
-    .cross-one
-    .cross-two
-  .about-text
-    p
-      | So using LEELOO the person forces to himself the information flow. Clouds of associations with the random objects and their characteristics help the thinker to find the proper solution. The right idea is found by conparing different object characteristics with the purpose of the observer, though parallels, matching and mismatching, though borrowing, exaggeration, etc.
-    p
-      | The site endlessly offers new combinations of images — every shown object has many attributes (appearance, meaning, size, degree of importance to you and to humanity in general, complexity of the object, connections with the world and the person, emotions it evokes, its symboolism and so on) that generate a great number of associations.
-  h1.team TEAM
-  = image_tag "faces.png", class: "team"
+  .about-wrapper
+    .close-about
+      .cross-one
+      .cross-two
+    .about-text
+      p
+        | So using LEELOO the person forces to himself the information flow. Clouds of associations with the random objects and their characteristics help the thinker to find the proper solution. The right idea is found by conparing different object characteristics with the purpose of the observer, though parallels, matching and mismatching, though borrowing, exaggeration, etc.
+      p
+        | The site endlessly offers new combinations of images — every shown object has many attributes (appearance, meaning, size, degree of importance to you and to humanity in general, complexity of the object, connections with the world and the person, emotions it evokes, its symboolism and so on) that generate a great number of associations.
+    h1.team
+      | TEA
+      span.last-letter M
+    .team-members
+      .team-member
+        = image_tag "face1.png", class: "team-face"
+        p.name Sasha Blagov
+        p.role Co-founder
+      .team-member
+        = image_tag "face2.png", class: "team-face"
+        p.name Anton Schnaider
+        p.role Founder
+      .team-member
+        = image_tag "face3.png", class: "team-face"
+        p.name Vitaly Shvedchenko
+        p.role Engineer
+      .team-member
+        = image_tag "face4.png", class: "team-face"
+        p.name Anderey Maykov
+        p.role Friend & Tester

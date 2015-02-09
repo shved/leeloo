@@ -199,17 +199,19 @@
 
     #setting up initial state
 
+    $(".about").hide();
+
     setIdleTimeout idleTimeout
 
     if playing
       $(".control > .play").hide()
       imageShowTick = setInterval addImageIntoDOM, interval
 
-    setSpeed speed
-
     for tag in tags
       $(".container").append(tagHtml(tag))
       fetchImagesByKeyword tag
+
+    setSpeed speed
 
     #setting up all event handlers
 
@@ -251,8 +253,28 @@
       $(".about").hide();
     )
 
+    #keyboard controls on window
+    $(window).on("keyup", (event) ->
+      switch event.which
+        when 27
+          $(".about").hide()
+        when 32
+          if playing
+            $(".control > .play").show()
+            $(".control > .pause").hide()
+            playing = false
+            clearInterval imageShowTick
+          else if tags.length > 0
+            $(".control > .play").hide()
+            $(".control > .pause").show()
+            playing = true
+            imageShowTick = setInterval addImageIntoDOM, interval
+          else if tags.length < 1
+            tagsInputBlink()
+    )
+
     #adding new tag
-    $(".add").on("click", (event) ->
+    $(".add").on("click", ->
       if $(".tags-input").val()
         addTag()
         $(".tag-item").on("click", ->

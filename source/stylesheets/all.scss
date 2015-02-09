@@ -8,6 +8,7 @@ $ctrls-height: 35px;
 $speed-control-width: 288px;
 $body-margin: 60px;
 $input-width: 228px;
+$controls-font-size: 22px;
 
 @mixin round-bords($rad) {
   -webkit-border-radius: $rad;
@@ -32,7 +33,7 @@ $input-width: 228px;
 }
 
 body {
-  font-size: 16pt;
+  font-size: 1em;
   margin: $body-margin;
   background: gray;
   overflow: hidden;
@@ -63,7 +64,7 @@ body {
     border: none;
     background: none;
     color: white;
-    font-size: 16pt;
+    font-size: $controls-font-size;
     cursor: pointer;
     @extend %os-thin;
     &:focus {
@@ -107,7 +108,7 @@ body {
   outline: none;
   background: blue;
   font-style: italic;
-  font-size: 16pt;
+  font-size: $controls-font-size;
   color: white;
   -webkit-transition: all .2s ease-in-out;
      -moz-transition: all .2s ease-in-out;
@@ -182,7 +183,7 @@ body {
     border: none;
     background: blue;
     color: white;
-    font-size: 16pt;
+    font-size: $controls-font-size;
     padding: 0 20px 0 20px;
     margin: 2px;
     overflow: hidden;
@@ -252,7 +253,7 @@ body {
   font-family: "PT Mono";
   font-style: bold;
   font-weight: 600;
-  font-size: 22pt;
+  font-size: 30px;
   text-decoration: none;
   color: black;
   cursor: url(image-path("cur_i.png")) 25 25, not-allowed;
@@ -275,70 +276,91 @@ iframe {
 
 .about {
   background: rgba(0, 0, 0, 0.8);
-  position: absolute;
+  position: fixed;
+  overflow-y: scroll;
   top: 0;
   left: 0;
   height: 100%;
   width: 100%;
   z-index: 1;
   display: block;
-  .about-text {
+  .about-wrapper {
+    cursor: default;
     margin: 40px auto;
-    width: 80%;
-    height: 30%;
+    width: fixed;
+    width: 964px;
     text-align: center;
-    p {
-      margin: 20px;
+    .about-text {
+      margin: 20px auto;
+      width: 100%;
+      text-align: center;
+      p {
+        margin: 20px;
+        @extend %os-thin;
+        font-size: 1em;
+        color: white;
+      }
+    }
+    h1.team {
+      margin: 40px auto;
       @extend %os-thin;
-      font-size: 13pt;
+      font-size: 3.5em;
+      letter-spacing: 1.5em;
       color: white;
+      .last-letter {
+        letter-spacing: 0;
+      }
     }
-  }
-  h1.team {
-    margin: 0 auto;
-    width: fixed;
-    width: 500px;
-    height: 25%;
-    @extend %os-thin;
-    font-size: 56pt;
-    letter-spacing: 100px;
-    color: white;
-  }
-  img.team {
-    display: block;
-    width: fixed;
-    width: 824px;
-    height: 25%;
-    margin: 0 auto;
-  }
-  .close-about {
-    cursor: pointer;
-    background: rgba(255, 255, 255, 0);
-    height: 50px;
-    width: 50px;
-    position: absolute;
-    right: 0;
-    top: 0;
-    margin: 40px;
-    .cross-one {
+    .team-members {
+      display: block;
+      margin: 20px auto;
+      .team-member {
+        display: inline-block;
+        width: 25%;
+        text-align: center;
+        p.name {
+          margin: 20px auto 10px auto;
+          @extend %os-thin;
+          font-size: 1em;
+          color: white;
+        }
+        p.role {
+          margin: 10px auto;
+          @extend %os-thin-italic;
+          font-size: 0.8em;
+          color: white;
+        }
+      }
+    }
+    .close-about {
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0);
       height: 50px;
-      width: 10px;
-      background: red;
-      position: relative;
-      left: 20px;
-      top: 0px;
-      -webkit-transform: rotate(45deg);
-              transform: rotate(45deg);
-    }
-    .cross-two {
-      height: 10px;
       width: 50px;
-      background: red;
-      position: relative;
-      left: 0;
-      top: -30px;
-      -webkit-transform: rotate(45deg);
-              transform: rotate(45deg);
+      position: absolute;
+      right: 0;
+      top: 0;
+      margin: 40px;
+      .cross-one {
+        height: 50px;
+        width: 10px;
+        background: red;
+        position: relative;
+        left: 20px;
+        top: 0px;
+        -webkit-transform: rotate(45deg);
+                transform: rotate(45deg);
+      }
+      .cross-two {
+        height: 10px;
+        width: 50px;
+        background: red;
+        position: relative;
+        left: 0;
+        top: -30px;
+        -webkit-transform: rotate(45deg);
+                transform: rotate(45deg);
+      }
     }
   }
 }
