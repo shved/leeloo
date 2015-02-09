@@ -293,7 +293,8 @@ iframe {
     .about-text {
       margin: 20px auto;
       width: 100%;
-      text-align: center;
+      height: 30%;
+      text-align: left;
       p {
         margin: 20px;
         @extend %os-thin;
