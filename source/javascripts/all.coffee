@@ -5,14 +5,14 @@
 
   ###
   initial state
-  speed could be: "slow", "normal", "high"
+  speed could be: "slow", "fast", "faster"
   ###
 
-  speed = "normal"
+  speed = "fast"
   tags = ["mandelbrot", "webpunk", "Кадыров"]
   playing = true
   interval = 2000
-  delay = 500
+  delay = 200
 
   idleTimeout = 2500
 
@@ -40,16 +40,19 @@
     fetchInstagramImages keyword
 
   setSpeed = (newSpeed) ->
-    if newSpeed == "slow" or "normal" or "high"
+    if newSpeed == "slow" or "fast" or "faster"
       $(".speed-control .selected").removeClass("selected")
       $(".speed-control").find("." + newSpeed).addClass("selected")
       switch newSpeed
         when "slow" then interval = 4000
-        when "normal" then interval = 2000
-        when "high" then interval = 1000
+        when "fast" then interval = 2000
+        when "faster" then interval = 1000
         else interval = 2000
-      clearInterval imageShowTick
-      imageShowTick = setInterval addImageIntoDOM, interval
+
+      if playing
+        clearInterval imageShowTick
+        imageShowTick = setInterval addImageIntoDOM, interval
+
       speed = newSpeed
 
   document.onIdle = ->
@@ -236,12 +239,12 @@
       setSpeed "slow"
     )
 
-    $(".normal").on("click", ->
-        setSpeed "normal"
+    $(".fast").on("click", ->
+        setSpeed "fast"
       )
 
-    $(".high").on("click", ->
-        setSpeed "high"
+    $(".faster").on("click", ->
+        setSpeed "faster"
       )
 
     #logo control

@@ -1,10 +1,10 @@
 @charset "utf-8";
 
 @import url("http://fonts.googleapis.com/css?family=PT+Mono");
-@import url("http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,400,300&subset=latin,cyrillic");
+@import url("http://fonts.googleapis.com/css?family=PT+Sans:400,700,400italic&subset=latin,cyrillic");
 
 $ctrls-rad: 17px;
-$ctrls-height: 35px;
+$ctrls-height: 34px;
 $speed-control-width: 288px;
 $body-margin: 60px;
 $input-width: 228px;
@@ -16,24 +16,24 @@ $controls-font-size: 22px;
   border-radius: $rad;
 }
 
-%os-regular {
-  font-family: "Open Sans", sans-serif;
+%os-thin {
+  font-family: "PT Sans", sans-serif;
   font-weight: 400;
 }
 
-%os-thin {
-  font-family: "Open Sans", sans-serif;
-  font-weight: 300;
-}
-
 %os-thin-italic {
-  font-family: "Open Sans", sans-serif;
-  font-weight: 300;
+  font-family: "PT Sans", sans-serif;
+  font-weight: 400;
   font-style: italic;
 }
 
+%os-thick {
+  font-family: "PT Sans", sans-serif;
+  font-weight: 700;
+}
+
 body {
-  font-size: 1em;
+  font-size: 18px;
   margin: $body-margin;
   background: gray;
   overflow: hidden;
@@ -77,18 +77,18 @@ body {
       padding: 0 12px 0 12px;
       margin: 1px 4px 0 4px;
       color: red;
-      @extend %os-regular;
+      @extend %os-thick;
       @include round-bords($ctrls-rad - 3px);
     }
   &.slow {
     position: absolute;
     left: 58px;
   }
-  &.normal {
+  &.fast {
     position: absolute;
     left: 152px;
   }
-  &.high {
+  &.faster {
     position: absolute;
     left: 273px;
   }
@@ -107,7 +107,6 @@ body {
   border: none;
   outline: none;
   background: blue;
-  font-style: italic;
   font-size: $controls-font-size;
   color: white;
   -webkit-transition: all .2s ease-in-out;
@@ -133,7 +132,7 @@ body {
   border: none;
   position: absolute;
   top: 63px;
-  left: 664px;
+  left: 665px;
   height: $ctrls-height - 6px;
   width: $ctrls-height - 6px;
   @include round-bords($ctrls-rad - 4px);
@@ -144,21 +143,21 @@ body {
     background: none;
     border: none;
     margin: 0;
-    .cross-one {
-      height: 17px;
-      width: 3px;
+    .cross-vert {
+      height: 18px;
+      width: 2px;
       background: blue;
       position: absolute;
-      top: 6px;
-      left: 14px;
+      top: 5px;
+      left: 13px;
     }
-    .cross-two {
-      height: 3px;
-      width: 17px;
+    .cross-horiz {
+      height: 2px;
+      width: 18px;
       background: blue;
       position: absolute;
       top: 13px;
-      left: 7px;
+      left: 5px;
     }
   }
 }
@@ -298,15 +297,16 @@ iframe {
       p {
         margin: 20px;
         @extend %os-thin;
-        font-size: 1em;
+        font-size: 1.25em;
+        line-height: 1.5;
         color: white;
       }
     }
     h1.team {
-      margin: 40px auto;
+      margin: 90px auto;
       @extend %os-thin;
-      font-size: 3.5em;
-      letter-spacing: 1.5em;
+      font-size: 75px;
+      letter-spacing: 110px;
       color: white;
       .last-letter {
         letter-spacing: 0;
@@ -322,13 +322,13 @@ iframe {
         p.name {
           margin: 20px auto 10px auto;
           @extend %os-thin;
-          font-size: 1em;
+          font-size: 1.25em;
           color: white;
         }
         p.role {
           margin: 10px auto;
           @extend %os-thin-italic;
-          font-size: 0.8em;
+          font-size: 1em;
           color: white;
         }
       }
