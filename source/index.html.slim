@@ -5,11 +5,16 @@
   button class="fast" Fast
   button class="faster" Faster
 
-input.tags-input type="text" placeholder="Keyword"
-  button.add
-    .cross
-      .cross-vert
-      .cross-horiz
+.tags-input
+  .tags-input-wrapper.cf
+    input#tags-input type="text" placeholder="Keyword"
+    .add
+      .cross
+        .cross-vert
+        .cross-horiz
+    p.safe
+      a href="#" Safe
+      | or Dirty search
 
 .container
 

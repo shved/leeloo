@@ -7,7 +7,6 @@ $ctrls-rad: 17px;
 $ctrls-height: 34px;
 $speed-control-width: 288px;
 $body-margin: 60px;
-$input-width: 228px;
 $controls-font-size: 22px;
 
 %font-thin {
@@ -24,6 +23,17 @@ $controls-font-size: 22px;
 %font-thick {
   font-family: "PT Sans", sans-serif;
   font-weight: 700;
+}
+
+.cf {
+  zoom: 1;
+  &:after {
+    //content: "";
+    clear: both;
+  }
+  &:before {
+    //content: "";
+  }
 }
 
 body {
@@ -70,78 +80,99 @@ body {
       @extend %font-thick;
       border-radius: $ctrls-rad - 3px;
     }
-  &.slow {
-    position: absolute;
-    left: 58px;
-  }
-  &.fast {
-    position: absolute;
-    left: 152px;
-  }
-  &.faster {
-    position: absolute;
-    left: 273px;
-  }
+    &.slow {
+      position: absolute;
+      left: 58px;
+    }
+    &.fast {
+      position: absolute;
+      left: 152px;
+    }
+    &.faster {
+      position: absolute;
+      left: 273px;
+    }
   }
 }
 
 .tags-input {
-  padding: 0 40px 0 20px;
-  margin: 0;
   position: absolute;
   top: 60px;
   left: $body-margin + $speed-control-width + 60px;
-  height: $ctrls-height;
-  width: $input-width;
-  display: inline-block;
-  border: none;
-  outline: none;
-  background: blue;
-  font-size: $controls-font-size;
-  color: white;
-  transition: all .2s ease-in-out;
+  width: $speed-control-width;
+  height: 75px;
+  background: rgba(0, 0, 0, 0.5);
   border-radius: $ctrls-rad;
-  @extend %font-thin-italic;
-  &:focus {
-    outline: none;
-  }
-  &::placeholder {
-    color: white;
-  }
-}
-
-.add {
-  cursor: pointer;
-  background: #ebebff;
-  border: none;
-  position: absolute;
-  top: 63px;
-  left: 665px;
-  height: $ctrls-height - 6px;
-  width: $ctrls-height - 6px;
-  border-radius: $ctrls-rad;
-  &:focus {
-    outline: none;
-  }
-  .cross {
+  margin: 0;
+  padding: 0;
+  .tags-input-wrapper {
     background: none;
-    border: none;
-    margin: 0;
-    .cross-vert {
-      height: 18px;
-      width: 2px;
+    height: $ctrls-height;
+    width: $speed-control-width - 60px;
+    border-radius: $ctrls-rad;
+    input#tags-input {
+      float: left;
+      padding: 0 40px 0 20px;
+      margin: 0;
+      height: $ctrls-height;
+      width: $speed-control-width - 60px;
+      display: inline-block;
+      border: none;
+      outline: none;
       background: blue;
-      position: absolute;
-      top: 5px;
-      left: 13px;
+      font-size: $controls-font-size;
+      color: white;
+      transition: all .2s ease-in-out;
+      border-radius: $ctrls-rad;
+      @extend %font-thin-italic;
+      &:focus {
+        outline: none;
+      }
+      &::placeholder {
+        color: white;
+      }
     }
-    .cross-horiz {
-      height: 2px;
-      width: 18px;
-      background: blue;
-      position: absolute;
-      top: 13px;
-      left: 5px;
+    .add {
+      float: right;
+      position: relative;
+      left: 57px;
+      bottom: 31px;
+      display: inline-block;
+      cursor: pointer;
+      background: #ebebff;
+      border: none;
+      height: $ctrls-height - 6px;
+      width: $ctrls-height - 6px;
+      border-radius: $ctrls-rad;
+      &:focus {
+        outline: none;
+      }
+      .cross {
+        background: none;
+        border: none;
+        margin: 0;
+        .cross-vert {
+          height: 18px;
+          width: 2px;
+          background: blue;
+          position: absolute;
+          top: 5px;
+          left: 13px;
+        }
+        .cross-horiz {
+          height: 2px;
+          width: 18px;
+          background: blue;
+          position: absolute;
+          top: 13px;
+          left: 5px;
+        }
+      }
+    }
+    p.safe {
+      @extend %font-thin;
+      color: white;
+      font-size: $controls-font-size;
     }
   }
 }
@@ -153,7 +184,7 @@ body {
   z-index: 0;
   position: absolute;
   top: 58px;
-  left: $body-margin + $speed-control-width + 60px + $input-width + 58px;
+  left: $body-margin + (2 * $speed-control-width) + 58px;
   margin: 0 60px 0 60px;
   .tag-item {
     -webkit-flex: wrap;
@@ -183,6 +214,7 @@ body {
     }
   }
 }
+
 
 .control {
   padding: 0;
@@ -242,9 +274,7 @@ body {
   position: absolute;
   bottom: 60px;
   left: 60px;
-  -webkit-transform: rotate(180deg); /* Chrome, Safari, Opera */
-      -ms-transform: rotate(180deg); /* IE 9 */
-          transform: rotate(180deg);
+  transform: rotate(180deg);
 }
 
 iframe {
@@ -330,8 +360,7 @@ iframe {
         position: relative;
         left: 20px;
         top: 0px;
-        -webkit-transform: rotate(45deg);
-                transform: rotate(45deg);
+        transform: rotate(45deg);
       }
       .cross-two {
         height: 10px;
@@ -340,8 +369,7 @@ iframe {
         position: relative;
         left: 0;
         top: -30px;
-        -webkit-transform: rotate(45deg);
-                transform: rotate(45deg);
+        transform: rotate(45deg);
       }
     }
   }

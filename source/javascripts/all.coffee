@@ -67,11 +67,11 @@
     return "<div class=\"tag-item\"><p>#{ tagName }</p></div>"
 
   addTag = ->
-    tagName = $(".tags-input").val()
+    tagName = $("#tags-input").val()
     tags.push tagName
     fetchImagesByKeyword tagName
     $(".container").append(tagHtml(tagName))
-    $(".tags-input").val("")
+    $("#tags-input").val("")
     if tags.length == 1
       imageShowTick = setInterval addImageIntoDOM, interval
       $(".control > .play").hide()
@@ -154,9 +154,9 @@
       $(".images-layer > img:first").remove()
 
   tagsInputBlink = ->
-    $(".tags-input").css("background", "red")
+    $("#tags-input").css("background", "red")
     setTimeout( ->
-      $(".tags-input").css("background", "blue")
+      $("#tags-input").css("background", "blue")
     , 100)
 
   ###
@@ -278,7 +278,7 @@
 
     #adding new tag
     $(".add").on("click", ->
-      if $(".tags-input").val()
+      if $("#tags-input").val()
         addTag()
         $(".tag-item").on("click", ->
           tagToRemove = $(this).children().first().html()
@@ -290,15 +290,15 @@
     )
 
     #adding new tag with keyboard
-    $(".tags-input").on("keyup", (event) ->
-      if event.which == 13 && $(".tags-input").val()
+    $("#tags-input").on("keyup", (event) ->
+      if event.which == 13 && $("#tags-input").val()
         addTag()
         $(".tag-item").on("click", ->
           tagToRemove = $(this).children().first().html()
           removeTag tagToRemove
           $(this).remove()
         )
-      else if !$(".tags-input").val()
+      else if !$("#tags-input").val()
         tagsInputBlink()
       )
 
