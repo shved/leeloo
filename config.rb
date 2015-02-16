@@ -32,11 +32,18 @@
 # Helpers
 ###
 
+# MY STAFF
+require 'slim'
+activate :autoprefixer do |config|
+  config.browsers = ['last 2 versions']
+  config.cascade = true
+  config.inline = false
+end
+
 # Automatic image dimensions on image_tag helper
 # activate :automatic_image_sizes
 
 # Reload the browser automatically whenever files change
-require 'slim'
 activate :livereload
 
 # Methods defined in the helpers block are available in templates

@@ -10,24 +10,18 @@ $body-margin: 60px;
 $input-width: 228px;
 $controls-font-size: 22px;
 
-@mixin round-bords($rad) {
-  -webkit-border-radius: $rad;
-  -moz-border-radius: $rad;
-  border-radius: $rad;
-}
-
-%os-thin {
+%font-thin {
   font-family: "PT Sans", sans-serif;
   font-weight: 400;
 }
 
-%os-thin-italic {
+%font-thin-italic {
   font-family: "PT Sans", sans-serif;
   font-weight: 400;
   font-style: italic;
 }
 
-%os-thick {
+%font-thick {
   font-family: "PT Sans", sans-serif;
   font-weight: 700;
 }
@@ -37,11 +31,7 @@ body {
   margin: $body-margin;
   background: gray;
   overflow: hidden;
-  -webkit-user-select: none; /* Chrome/Safari */
-     -moz-user-select: none; /* Firefox */
-      -ms-user-select: none; /* IE10+ */
-       -o-user-select: none;
-          user-select: none;
+  user-select: none;
 }
 
 .image {
@@ -57,7 +47,7 @@ body {
   width: $speed-control-width;
   background: red;
   display: inline-block;
-  @include round-bords($ctrls-rad);
+  border-radius: $ctrls-rad;
   button {
     padding: 2px 0 4px 0;
     margin: 1px 22px 0 22px;
@@ -66,7 +56,7 @@ body {
     color: white;
     font-size: $controls-font-size;
     cursor: pointer;
-    @extend %os-thin;
+    @extend %font-thin;
     &:focus {
       outline: none;
     }
@@ -77,8 +67,8 @@ body {
       padding: 0 12px 0 12px;
       margin: 1px 4px 0 4px;
       color: red;
-      @extend %os-thick;
-      @include round-bords($ctrls-rad - 3px);
+      @extend %font-thick;
+      border-radius: $ctrls-rad - 3px;
     }
   &.slow {
     position: absolute;
@@ -109,19 +99,13 @@ body {
   background: blue;
   font-size: $controls-font-size;
   color: white;
-  -webkit-transition: all .2s ease-in-out;
-     -moz-transition: all .2s ease-in-out;
-       -o-transition: all .2s ease-in-out;
-          transition: all .2s ease-in-out;
-  @include round-bords($ctrls-rad);
-  @extend %os-thin-italic;
+  transition: all .2s ease-in-out;
+  border-radius: $ctrls-rad;
+  @extend %font-thin-italic;
   &:focus {
     outline: none;
   }
-  &::-webkit-input-placeholder {
-    color: white;
-  }
-  &:-moz-placeholder {
+  &::placeholder {
     color: white;
   }
 }
@@ -135,7 +119,7 @@ body {
   left: 665px;
   height: $ctrls-height - 6px;
   width: $ctrls-height - 6px;
-  @include round-bords($ctrls-rad - 4px);
+  border-radius: $ctrls-rad;
   &:focus {
     outline: none;
   }
@@ -163,12 +147,9 @@ body {
 }
 
 .container {
-  display: -webkit-flex;
   display: flex;
-  -webkit-flex-direction: raw;
-          flex-direction: raw;
-  -webkit-flex-wrap: wrap;
-          flex-wrap: wrap;
+  flex-direction: raw;
+  flex-wrap: wrap;
   z-index: 0;
   position: absolute;
   top: 58px;
@@ -186,13 +167,13 @@ body {
     padding: 0 20px 0 20px;
     margin: 2px;
     overflow: hidden;
-    @extend %os-thin;
-    @include round-bords($ctrls-rad);
+    @extend %font-thin;
+    border-radius: $ctrls-rad;
     &:focus {
       outline: none;
     }
     p {
-      @extend %os-thin;
+      @extend %font-thin;
       display: inline-block;
       text-align: left;
       margin: 5px 0 0 0;
@@ -215,7 +196,7 @@ body {
   height: 242px;
   width: 242px;
   cursor: pointer;
-  @include round-bords(121px);
+  border-radius: 121px;
   .pause {
     position: relative;
     left: 75px;
@@ -296,7 +277,7 @@ iframe {
       text-align: left;
       p {
         margin: 20px;
-        @extend %os-thin;
+        @extend %font-thin;
         font-size: 1.25em;
         line-height: 1.5;
         color: white;
@@ -304,7 +285,7 @@ iframe {
     }
     h1.team {
       margin: 90px auto;
-      @extend %os-thin;
+      @extend %font-thin;
       font-size: 75px;
       letter-spacing: 110px;
       color: white;
@@ -321,13 +302,13 @@ iframe {
         text-align: center;
         p.name {
           margin: 20px auto 10px auto;
-          @extend %os-thin;
+          @extend %font-thin;
           font-size: 1.25em;
           color: white;
         }
         p.role {
           margin: 10px auto;
-          @extend %os-thin-italic;
+          @extend %font-thin-italic;
           font-size: 1em;
           color: white;
         }
