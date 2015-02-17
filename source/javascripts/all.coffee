@@ -4,7 +4,7 @@
 ( ->
 
   ###
-  initial state
+  initial state and variables
   speed could be: "slow", "fast", "faster"
   ###
 
@@ -19,8 +19,13 @@
   imageQueue = []
   imagesPuff = 20
 
-  imageShowTick =0
+  imageShowTick = 0
   uniqueImageClass = 0
+
+  dirty = true
+
+  #htmlForDirty = "<a href=\"#\" class=\"safe\">Safe</a> or <span class=\"strng\">Dirty</span> result"
+  #htmlForSafe = "<span class=\"strng\">Safe</span> or <a href=\"#\" class=\"dirty\">Dirty</a> result"
 
   ###
   functions
@@ -168,7 +173,7 @@
   ###
 
   fetchGoogleImages = (keyword) ->
-    reqURL = "http://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=8&imgsz=large&q=#{ keyword }&safe=off"
+    reqURL = "http://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=8&imgsz=large&q=#{ keyword }"
     queries = [0, 8, 16, 24]
     $.map queries, (start) ->
       $.ajax
@@ -178,6 +183,7 @@
           pushGoogleImagesIntoQueue response, keyword
         data:
           "start": start
+          "safe": if dirty then "off" else "on"
 
   ###
   instagram request
@@ -202,7 +208,12 @@
 
     #setting up initial state
 
-    $(".about").hide();
+    $(".about").hide()
+
+    if dirty
+      $(".dirty-prompt").hide()
+    else
+      $(".safe-prompt").hide()
 
     setIdleTimeout idleTimeout
 
@@ -254,6 +265,41 @@
 
     $(".about").on("click", ".close-about", ->
       $(".about").hide();
+    )
+
+    #safe/dirty control
+    $(".safe").on("click", ->
+      dirty = false
+      $(".images-layer").empty()
+      imageQueue = []
+      for tag in tags
+        fetchImagesByKeyword tag
+      $(".safe-prompt").css({
+        "display": "none"
+      })
+      $(".dirty-prompt").css({
+        "display": "block"
+      })
+      $(".tags-input").css({
+        "background": "rgba(255, 255, 255, 0.3)"
+      })
+    )
+
+    $(".dirty").on("click", ->
+      dirty = true
+      $(".images-layer").empty()
+      imageQueue = []
+      for tag in tags
+        fetchImagesByKeyword tag
+      $(".safe-prompt").css({
+        "display": "block"
+      })
+      $(".dirty-prompt").css({
+        "display": "none"
+      })
+      $(".tags-input").css({
+        "background": "rgba(0, 0, 0, 0.3)"
+      })
     )
 
     #keyboard controls on window

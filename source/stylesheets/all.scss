@@ -25,17 +25,6 @@ $controls-font-size: 22px;
   font-weight: 700;
 }
 
-.cf {
-  zoom: 1;
-  &:after {
-    //content: "";
-    clear: both;
-  }
-  &:before {
-    //content: "";
-  }
-}
-
 body {
   font-size: 18px;
   margin: $body-margin;
@@ -90,7 +79,7 @@ body {
     }
     &.faster {
       position: absolute;
-      left: 273px;
+      left: 247px;
     }
   }
 }
@@ -107,9 +96,22 @@ body {
   padding: 0;
   .tags-input-wrapper {
     background: none;
+    position: absolute;
+    top: 0;
+    left: 0;
     height: $ctrls-height;
     width: $speed-control-width - 60px;
     border-radius: $ctrls-rad;
+    .cf {
+      zoom: 1;
+      &:after {
+        content: "";
+        clear: both;
+      }
+      &:before {
+        content: "";
+      }
+    }
     input#tags-input {
       float: left;
       padding: 0 40px 0 20px;
@@ -169,10 +171,45 @@ body {
         }
       }
     }
-    p.safe {
+    p.safe-prompt {
+      display: block;
+      position: absolute;
+      top: 32px;
+      margin-left: 20px;
       @extend %font-thin;
       color: white;
       font-size: $controls-font-size;
+      line-height: 0;
+      user-select: none;
+      .strng {
+        font-weight: 700;
+      }
+      a {
+        @extend %font-thin-italic;
+        color: white;
+        text-decoration: underline;
+        cursor: pointer;
+      }
+    }
+    p.dirty-prompt {
+      display: block;
+      position: absolute;
+      top: 32px;
+      margin-left: 20px;
+      @extend %font-thin;
+      color: white;
+      font-size: $controls-font-size;
+      line-height: 0;
+      user-select: none;
+      .strng {
+        font-weight: 700;
+      }
+      a {
+        @extend %font-thin-italic;
+        color: white;
+        text-decoration: underline;
+        cursor: pointer;
+      }
     }
   }
 }
@@ -220,7 +257,7 @@ body {
   padding: 0;
   margin: 0;
   border: none;
-  background: rgba(0, 0, 0, .5);
+  background: rgba(0, 0, 0, 0.3);
   position: fixed;
   left: 50%;
   top: 50%;
@@ -238,12 +275,12 @@ body {
     .pause-one {
       height: 142px;
       width: 30px;
-      background: rgba(255, 255, 255, 0.7);
+      background: rgba(255, 255, 255, 0.47);
     }
     .pause-two {
       height: 142px;
       width: 30px;
-      background: rgba(255, 255, 255, 0.7);
+      background: rgba(255, 255, 255, 0.47);
       position: relative;
       left: 62px;
       top: -142px;
@@ -254,7 +291,7 @@ body {
     height: 0;
     border-top: 71px solid transparent;
     border-bottom: 71px solid transparent;
-    border-left: 110px solid rgba(255, 255, 255, 0.7);
+    border-left: 110px solid rgba(255, 255, 255, 0.47);
     position: relative;
     left: 82px;
     top: 50px;

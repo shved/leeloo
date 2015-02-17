@@ -12,9 +12,12 @@
       .cross
         .cross-vert
         .cross-horiz
-    p.safe
-      a href="#" Safe
-      | or Dirty search
+    p.safe-prompt
+      a href="#" class="safe" Safe
+      |  or <span class="strng">Dirty</span> result
+    p.dirty-prompt
+      span class="strng" Safe
+      |  or <a class="dirty">Dirty</a> result
 
 .container
 
