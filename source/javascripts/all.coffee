@@ -97,20 +97,70 @@
 
   removeTag = (tagName) ->
     index = tags.indexOf(tagName)
-    if index > -1
-      tags.splice index, 1
-      if tags.length < 1
-        clearInterval imageShowTick
-        $(".control > .play").show()
-        $(".control > .pause").hide()
-        playing = false
-        imageQueue = []
-        tags = []
-      else
-        imageQueue = $.grep(imageQueue, (image) ->
-          return image.tag != tagName
-          )
-        imageQueue.shuffle()
+    tags.splice index, 1
+    if tags.length < 1
+      clearInterval imageShowTick
+      $(".control > .play").show()
+      $(".control > .pause").hide()
+      playing = false
+      imageQueue = []
+      tags = []
+      $(".images-layer").empty()
+    else
+      imageQueue = $.grep(imageQueue, (image) ->
+        return image.tag != tagName
+        )
+      $(".images-layer > ._#{ tagName }").remove()
+      imageQueue.shuffle()
+
+  addImageIntoDOM = ->
+    uniqueImageClass += 1
+    imageIndex = uniqueImageClass % imageQueue.length
+    if imageIndex == 0
+      imageQueue.shuffle()
+    $(".images-layer").append("<img class=\"_image image-#{ uniqueImageClass } _#{ imageQueue[imageIndex].tag }\" src=\"#{ imageQueue[imageIndex].url }\"/>")
+    image = $(".image-#{ uniqueImageClass }")
+    image.css({
+      "left" : (Math.floor(Math.random() * ($(window).width() - imageQueue[imageIndex].width))) + randomGap(imageQueue[imageIndex].width)
+      "top" : (Math.floor(Math.random() * ($(window).height() - imageQueue[imageIndex].height))) + randomGap(imageQueue[imageIndex].height)
+      "width" : imageQueue[imageIndex].width
+      "height" : imageQueue[imageIndex].height
+      }).hide()
+    setTimeout( ->
+      image.show()
+    , delay)
+    if $(".images-layer > img").length > imagesPuff
+      $(".images-layer > img:first").remove()
+
+  tagsInputBlink = ->
+    $("#tags-input").css("background", "red")
+    setTimeout( ->
+      $("#tags-input").css("background", "blue")
+    , 100)
+
+  randomGap = (value) ->
+    return [-1, 1][Math.floor(Math.random()*2)] * (value * (Math.random()/6))
+
+  ###
+  ajax requests stuff
+  ###
+
+  ###
+  google request
+  ###
+
+  fetchGoogleImages = (keyword) ->
+    reqURL = "http://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=8&imgsz=large&q=#{ keyword }"
+    queries = [0, 8, 16, 24]
+    $.map queries, (start) ->
+      $.ajax
+        url: reqURL
+        dataType: "jsonp"
+        success: (response) ->
+          pushGoogleImagesIntoQueue response, keyword
+        data:
+          "start": start
+          "safe": if dirty then "off" else "on"
 
   pushGoogleImagesIntoQueue = (response, tag) ->
     if response.responseData.results[0].url
@@ -140,63 +190,6 @@
         }
     imageQueue.shuffle()
 
-  pushInstImagesIntoQueue = (response, hashTag) ->
-    if response.data[0].images.standard_resolution.url
-      for post in response.data
-        imageQueue.push {
-          url: post.images.standard_resolution.url
-          width: 612
-          height: 612
-          tag: hashTag
-        }
-    imageQueue.shuffle()
-
-  addImageIntoDOM = ->
-    uniqueImageClass += 1
-    imageIndex = uniqueImageClass % imageQueue.length
-    if imageIndex == 0
-      imageQueue.shuffle()
-    $(".images-layer").append("<img class=\"image image-#{ uniqueImageClass }\" src=\"#{ imageQueue[imageIndex].url }\"/>")
-    image = $(".image-#{ uniqueImageClass }")
-    image.css({
-      "left" : Math.floor(Math.random() * ($(window).width() - imageQueue[imageIndex].width))
-      "top" : Math.floor(Math.random() * ($(window).height() - imageQueue[imageIndex].height))
-      "width" : imageQueue[imageIndex].width
-      "height" : imageQueue[imageIndex].height
-      }).hide()
-    setTimeout( ->
-      image.show()
-    , delay)
-    if $(".images-layer > img").length > imagesPuff
-      $(".images-layer > img:first").remove()
-
-  tagsInputBlink = ->
-    $("#tags-input").css("background", "red")
-    setTimeout( ->
-      $("#tags-input").css("background", "blue")
-    , 100)
-
-  ###
-  ajax requests stuff
-  ###
-
-  ###
-  google request
-  ###
-
-  fetchGoogleImages = (keyword) ->
-    reqURL = "http://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=8&imgsz=large&q=#{ keyword }"
-    queries = [0, 8, 16, 24]
-    $.map queries, (start) ->
-      $.ajax
-        url: reqURL
-        dataType: "jsonp"
-        success: (response) ->
-          pushGoogleImagesIntoQueue response, keyword
-        data:
-          "start": start
-          "safe": if dirty then "off" else "on"
-
   ###
   instagram request
   ###
@@ -211,6 +204,17 @@
         pushInstImagesIntoQueue response, hashTag
       data:
         count: 6
+
+  pushInstImagesIntoQueue = (response, hashTag) ->
+    if response.data[0].images.standard_resolution.url
+      for post in response.data
+        imageQueue.push {
+          url: post.images.standard_resolution.url
+          width: 612
+          height: 612
+          tag: hashTag
+        }
+    imageQueue.shuffle()
 
   ###
   main stuff
