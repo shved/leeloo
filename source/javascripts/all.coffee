@@ -24,9 +24,6 @@
 
   dirty = true
 
-  #htmlForDirty = "<a href=\"#\" class=\"safe\">Safe</a> or <span class=\"strng\">Dirty</span> result"
-  #htmlForSafe = "<span class=\"strng\">Safe</span> or <a href=\"#\" class=\"dirty\">Dirty</a> result"
-
   ###
   functions
   ###
@@ -49,9 +46,24 @@
       $(".speed-control .selected").removeClass("selected")
       $(".speed-control").find("." + newSpeed).addClass("selected")
       switch newSpeed
-        when "slow" then interval = 4000
-        when "fast" then interval = 2000
-        when "faster" then interval = 1000
+        when "slow"
+          interval = 4000
+          $(".speed-control > .selected-bg").css({
+            "left": "62px"
+            "width": "82px"
+          })
+        when "fast"
+          interval = 2000
+          $(".speed-control > .selected-bg").css({
+            "left": "160px"
+            "width": "78px"
+          })
+        when "faster"
+          interval = 1000
+          $(".speed-control > .selected-bg").css({
+            "left": "250px"
+            "width": "96px"
+          })
         else interval = 2000
 
       if playing
