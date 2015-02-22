@@ -20,7 +20,7 @@
   imagesPuff = 20
 
   imageShowTick = 0
-  uniqueImageClass = 0
+  uniqueImageId = 0
 
   dirty = true
 
@@ -114,12 +114,12 @@
       imageQueue.shuffle()
 
   addImageIntoDOM = ->
-    uniqueImageClass += 1
-    imageIndex = uniqueImageClass % imageQueue.length
+    uniqueImageId += 1
+    imageIndex = uniqueImageId % imageQueue.length
     if imageIndex == 0
       imageQueue.shuffle()
-    $(".images-layer").append("<img class=\"_image image-#{ uniqueImageClass } _#{ imageQueue[imageIndex].tag }\" src=\"#{ imageQueue[imageIndex].url }\"/>")
-    image = $(".image-#{ uniqueImageClass }")
+    $(".images-layer").append("<img class=\"_image _#{ imageQueue[imageIndex].tag }\" id=\"image-#{ uniqueImageId }\" src=\"#{ imageQueue[imageIndex].url }\" onerror=\"var newSrc=Math.floor(Math.random()*595); this.onerror=null; this.src='images/emoji/' + newSrc + '.png'; \"/>")
+    image = $("#image-#{ uniqueImageId }")
     image.css({
       "left" : (Math.floor(Math.random() * ($(window).width() - imageQueue[imageIndex].width))) + randomGap(imageQueue[imageIndex].width)
       "top" : (Math.floor(Math.random() * ($(window).height() - imageQueue[imageIndex].height))) + randomGap(imageQueue[imageIndex].height)
@@ -324,18 +324,19 @@
         when 27
           $(".about").hide()
         when 32
-          if playing
-            $(".control > .play").show()
-            $(".control > .pause").hide()
-            playing = false
-            clearInterval imageShowTick
-          else if tags.length > 0
-            $(".control > .play").hide()
-            $(".control > .pause").show()
-            playing = true
-            imageShowTick = setInterval addImageIntoDOM, interval
-          else if tags.length < 1
-            tagsInputBlink()
+          if !$("#tags-input").is(":focus")
+            if playing
+              $(".control > .play").show()
+              $(".control > .pause").hide()
+              playing = false
+              clearInterval imageShowTick
+            else if tags.length > 0
+              $(".control > .play").hide()
+              $(".control > .pause").show()
+              playing = true
+              imageShowTick = setInterval addImageIntoDOM, interval
+            else if tags.length < 1
+              tagsInputBlink()
     )
 
     #adding new tag
