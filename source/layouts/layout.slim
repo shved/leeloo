@@ -9,5 +9,9 @@ html
     = stylesheet_link_tag "all"
     = javascript_include_tag "all"
 
+    /[if IE 9]
+    javascript:
+      document.createElement('video');
+
   body
     = yield

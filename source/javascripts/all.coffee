@@ -200,8 +200,6 @@ fetchGoogleImages = (keyword) ->
       data:
         "start": start
         "safe": if dirty then "off" else "on"
-      error:
-        console.log('')
 
 ###
 instagram request
@@ -217,8 +215,6 @@ fetchInstagramImages = (hashTag) ->
       pushImagesIntoQueue response, hashTag, "instagram"
     data:
       count: 10
-    error:
-      console.log('')
 
 ###
 main stuff
@@ -227,6 +223,8 @@ main stuff
 $(document).ready ->
 
   #setting up initial state
+
+  #$("#bgvid").playbackRate = 2.0
 
   $(".about").hide()
 
@@ -288,11 +286,17 @@ $(document).ready ->
 
   #logo control
   $("#logo").on("click", ->
-    $(".about").show();
+    $(".about").show()
+    $("#bgvid").get(0).play()
+    if playing
+      clearInterval imageShowTick
   )
 
   $(".about").on("click", ".close-about", ->
-    $(".about").hide();
+    $(".about").hide()
+    $("#bgvid").get(0).pause()
+    if playing
+      imageShowTick = setInterval addImageIntoDOM, interval
   )
 
   #safe/dirty control
