@@ -41,7 +41,9 @@ dict = [
   "lightning bolt",
   "borges bibliothek",
   "adventure time",
-  "Noel Fielding"
+  "Noel Fielding",
+  "Varanasi",
+  "stupa"
 ]
 
 speed = "fast"
@@ -123,7 +125,7 @@ addTag = ->
   tagName = $("#tags-input").val()
   tags.push tagName
   fetchImagesByKeyword tagName
-  $(".container").append(tagHtml(tagName))
+  $(".container").prepend(tagHtml(tagName))
   $("#tags-input").val("")
   if tags.length == 1
     imageShowTick = setInterval addImageIntoDOM, interval
@@ -168,6 +170,13 @@ addImageIntoDOM = ->
   if $(".images-layer > img").length > imagesPuff
     $(".images-layer > img:first").remove()
 
+getRandomInitialTags = (dict, len) ->
+  while tags.length < len
+    index = Math.floor(Math.random() * dict.length)
+    tags.push(dict[index])
+    dict.splice index, 1
+  return tags
+
 tagsInputBlink = ->
   $("#tags-input").css("background", "red")
   setTimeout( ->
@@ -177,12 +186,13 @@ tagsInputBlink = ->
 randomGap = (value) ->
   return [-1, 1][Math.floor(Math.random() * 2)] * (value * (Math.random() / 6))
 
-getRandomInitialTags = (dict, len) ->
-  while tags.length < len
-    index = Math.floor(Math.random() * dict.length)
-    tags.push(dict[index])
-    dict.splice index, 1
-  return tags
+shareHoverAnimation = ->
+  $tagitems = $(".container > .tag-item")
+  $tagitems.animate({
+    width: "100px"
+  }, 300).animate({
+    height: "100px"
+  }, 300)
 
 ###
 ajax requests stuff
@@ -285,12 +295,21 @@ $(document).ready ->
   tags = getRandomInitialTags(dict, 3)
 
   for tag in tags
-    $(".container").append(tagHtml(tag))
+    $(".container").prepend(tagHtml(tag))
     fetchImagesByKeyword tag
 
   setSpeed speed
 
   #setting up all event handlers
+
+  $(".share").on({
+    mouseenter: ->
+      $(".container > .tag-item").addClass("animated-gradient-hover")
+    ,
+    mouseleave: ->
+      $(".container > .tag-item").removeClass("animated-gradient-hover")
+  })
+
 
   #window visibility
   $(document).on("visibilitychange", ->
