@@ -6,8 +6,46 @@ initial state and variables
 speed could be: "slow", "fast", "faster"
 ###
 
+dict = [
+  "baroque",
+  "minimalistic",
+  "tie dye",
+  "kaleidoscope",
+  "bhagavad gita",
+  "ISIL",
+  "Tolstoy",
+  "Кадыров",
+  "mandelbrot",
+  "webpunk",
+  "butterfly knife",
+  "starcraft brood war",
+  "doom II",
+  "hieronymus bosch",
+  "indigo children",
+  "butterfly",
+  "Charles Manson",
+  "atari",
+  "armagetron",
+  "Escher",
+  "Psychic TV",
+  "Liquid Sky",
+  "acid folk",
+  "acid",
+  "DMT",
+  "kali",
+  "AK-47",
+  "virtual reality",
+  "DARPA",
+  "freemasonry",
+  "ГУЛАГ",
+  "lightning bolt",
+  "borges bibliothek",
+  "adventure time",
+  "Noel Fielding"
+]
+
 speed = "fast"
-tags = ["mandelbrot", "webpunk", "Кадыров"]
+tags = []
 playing = true
 interval = 2000
 delay = 200
@@ -137,7 +175,14 @@ tagsInputBlink = ->
   , 100)
 
 randomGap = (value) ->
-  return [-1, 1][Math.floor(Math.random()*2)] * (value * (Math.random()/6))
+  return [-1, 1][Math.floor(Math.random() * 2)] * (value * (Math.random() / 6))
+
+getRandomInitialTags = (dict, len) ->
+  while tags.length < len
+    index = Math.floor(Math.random() * dict.length)
+    tags.push(dict[index])
+    dict.splice index, 1
+  return tags
 
 ###
 ajax requests stuff
@@ -224,8 +269,6 @@ $(document).ready ->
 
   #setting up initial state
 
-  #$("#bgvid").playbackRate = 2.0
-
   $(".about").hide()
 
   if dirty
@@ -238,6 +281,8 @@ $(document).ready ->
   if playing
     $(".control > .play").hide()
     imageShowTick = setInterval addImageIntoDOM, interval
+
+  tags = getRandomInitialTags(dict, 3)
 
   for tag in tags
     $(".container").append(tagHtml(tag))
