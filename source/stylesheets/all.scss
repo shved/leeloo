@@ -70,6 +70,7 @@ body {
     font-size: $controls-font-size;
     cursor: pointer;
     @extend %font-thin;
+    line-height: 30px;
     &:focus {
       outline: none;
     }
@@ -235,7 +236,7 @@ body {
   .animated-gradient-hover {
     background: linear-gradient(0deg, blue, blueviolet, red, orange, yellow, lime, cyan, blue) !important;
     background-size: 1200% 1200% !important;
-    animation: gradient-hover 2s linear infinite;
+    animation: gradient-hover 1s linear infinite;
   }
   .tag-item {
     flex: wrap;
@@ -259,8 +260,7 @@ body {
       text-align: left;
       margin: 5px 0 0 0;
       padding: 0;
-      vertical-align: middle;
-      line-height: 100%;
+      line-height: 25px;
     }
   }
   .share {
@@ -271,10 +271,10 @@ body {
     color: white;
     cursor: pointer;
     font-size: $controls-font-size;
-    padding: 0 20px 0 20px;
+    padding: 0 16px 0 20px;
     margin: 2px;
     overflow: hidden;
-    @extend %font-thin;
+    @extend %font-thin-italic;
     border-radius: $ctrls-rad;
     &:focus {
       outline: none;
@@ -286,7 +286,13 @@ body {
       margin: 5px 0 0 0;
       padding: 0;
       vertical-align: middle;
-      line-height: 100%;
+      line-height: 25px;
+    }
+    img {
+      display: inline-block;
+      margin-left: 5px;
+      position: relative;
+      top: 4px;
     }
   }
 }

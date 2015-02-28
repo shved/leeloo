@@ -8,7 +8,7 @@ speed could be: "slow", "fast", "faster"
 
 dict = [
   "baroque",
-  "minimalistic",
+  "minimalism",
   "tie dye",
   "kaleidoscope",
   "bhagavad gita",
@@ -17,7 +17,7 @@ dict = [
   "Кадыров",
   "mandelbrot",
   "webpunk",
-  "butterfly knife",
+  "hunting knife",
   "starcraft brood war",
   "doom II",
   "hieronymus bosch",
@@ -29,7 +29,6 @@ dict = [
   "Escher",
   "Psychic TV",
   "Liquid Sky",
-  "acid folk",
   "acid",
   "DMT",
   "kali",
@@ -38,12 +37,17 @@ dict = [
   "DARPA",
   "freemasonry",
   "ГУЛАГ",
-  "lightning bolt",
+  "lightning",
+  "medieval engravings",
   "borges bibliothek",
   "adventure time",
   "Noel Fielding",
   "Varanasi",
-  "stupa"
+  "stupa",
+  "curiosity mars",
+  "large hadron collider",
+  "hubble",
+  "тарковский фильмы"
 ]
 
 speed = "fast"
@@ -110,14 +114,6 @@ setSpeed = (newSpeed) ->
 
     speed = newSpeed
 
-document.onIdle = ->
-  $(".control").fadeOut(500, ->
-  )
-
-document.onBack = ->
-  $(".control").fadeIn(500, ->
-  )
-
 tagHtml = (tagName) ->
   return "<div class=\"tag-item\"><p>#{ tagName }</p></div>"
 
@@ -169,6 +165,32 @@ addImageIntoDOM = ->
   , delay)
   if $(".images-layer > img").length > imagesPuff
     $(".images-layer > img:first").remove()
+
+###
+url params stuff
+###
+
+jQuery.extend getQueryParameters: (str) ->
+  (str or document.location.search).replace(/(^\?)/, "").split("&").map(((n) ->
+    n = n.split("=")
+    @[n[0]] = n[1]
+    this
+  ).bind({}))[0]
+
+getShareUrl = ->
+  str = document.location.origin + "?tags=" + encodeURI(tags.join(","))
+
+###
+helpers
+###
+
+document.onIdle = ->
+  $(".control").fadeOut(500, ->
+  )
+
+document.onBack = ->
+  $(".control").fadeIn(500, ->
+  )
 
 getRandomInitialTags = (dict, len) ->
   while tags.length < len
@@ -279,6 +301,13 @@ $(document).ready ->
 
   #setting up initial state
 
+  queryParams = $.getQueryParameters()
+
+  if queryParams["tags"]
+    tags = decodeURI(queryParams["tags"]).split(",")
+  else
+    tags = getRandomInitialTags(dict, 3)
+
   $(".about").hide()
 
   if dirty
@@ -292,8 +321,6 @@ $(document).ready ->
     $(".control > .play").hide()
     imageShowTick = setInterval addImageIntoDOM, interval
 
-  tags = getRandomInitialTags(dict, 3)
-
   for tag in tags
     $(".container").prepend(tagHtml(tag))
     fetchImagesByKeyword tag
@@ -301,15 +328,6 @@ $(document).ready ->
   setSpeed speed
 
   #setting up all event handlers
-
-  $(".share").on({
-    mouseenter: ->
-      $(".container > .tag-item").addClass("animated-gradient-hover")
-    ,
-    mouseleave: ->
-      $(".container > .tag-item").removeClass("animated-gradient-hover")
-  })
-
 
   #window visibility
   $(document).on("visibilitychange", ->
@@ -418,6 +436,16 @@ $(document).ready ->
           else if tags.length < 1
             tagsInputBlink()
   )
+
+  #share button
+  $(".share").on({
+    mouseenter: ->
+      $(".container > .tag-item").addClass("animated-gradient-hover")
+    mouseleave: ->
+      $(".container > .tag-item").removeClass("animated-gradient-hover")
+    click: ->
+      console.log(getShareUrl())
+  })
 
   #adding new tag
   $(".add").on("click", ->
