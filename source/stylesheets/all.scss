@@ -249,6 +249,8 @@ body {
     padding: 0 20px 0 20px;
     margin: 2px;
     overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     @extend %font-thin;
     border-radius: $ctrls-rad;
     &:focus {
@@ -366,6 +368,72 @@ iframe {
   left: 200px;
 }
 
+.share-url {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 1;
+  display: block;
+  overflow-y: scroll;
+  background: rgba(0, 0, 0, 0.5);
+  text-align: center;
+  .close {
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0);
+    height: 50px;
+    width: 50px;
+    position: fixed;
+    right: 0;
+    top: 0;
+    margin: 40px;
+    .cross-one {
+      height: 50px;
+      width: 10px;
+      background: red;
+      position: relative;
+      left: 20px;
+      top: 0px;
+      transform: rotate(45deg);
+    }
+    .cross-two {
+      height: 10px;
+      width: 50px;
+      background: red;
+      position: relative;
+      left: 0;
+      top: -30px;
+      transform: rotate(45deg);
+    }
+  }
+  .share-url-box {
+    margin: 80px 90px 0 0;
+    padding: 20px 40px;
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    border-radius: 15px;
+    max-width: 80%;
+    background: red;
+    p {
+      color: white;
+      margin: 10px;
+      @extend %font-thin-italic;
+      font-size: 2em;
+      &.the-url {
+        color: blue;
+        user-select: text;
+        word-wrap: break-word;
+        &::selection {
+          background: yellow;
+        }
+      }
+    }
+  }
+}
+
 .about {
   position: fixed;
   top: 0;
@@ -446,7 +514,7 @@ iframe {
         }
       }
     }
-    .close-about {
+    .close {
       cursor: pointer;
       background: rgba(255, 255, 255, 0);
       height: 50px;

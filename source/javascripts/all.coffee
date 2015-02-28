@@ -310,6 +310,8 @@ $(document).ready ->
 
   $(".about").hide()
 
+  $(".share-url").hide()
+
   if dirty
     $(".dirty-prompt").hide()
   else
@@ -374,7 +376,7 @@ $(document).ready ->
       clearInterval imageShowTick
   )
 
-  $(".about").on("click", ".close-about", ->
+  $(".about").on("click", ".close", ->
     $(".about").hide()
     $("#bgvid").get(0).pause()
     if playing
@@ -420,7 +422,13 @@ $(document).ready ->
   $(window).on("keyup", (event) ->
     switch event.which
       when 27
-        $(".about").hide()
+        if $(".about").is(":visible")
+          $(".about").hide()
+          $("#bgvid").get(0).pause()
+          if playing
+            imageShowTick = setInterval addImageIntoDOM, interval
+        if $(".share-url").is(":visible")
+          $(".share-url").hide()
       when 32
         if !$("#tags-input").is(":focus")
           if playing
@@ -444,8 +452,13 @@ $(document).ready ->
     mouseleave: ->
       $(".container > .tag-item").removeClass("animated-gradient-hover")
     click: ->
-      console.log(getShareUrl())
+      $(".the-url").text(getShareUrl())
+      $(".share-url").show()
   })
+
+  $(".share-url").on("click", ".close", ->
+    $(".share-url").hide()
+  )
 
   #adding new tag
   $(".add").on("click", ->
