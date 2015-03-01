@@ -47,14 +47,15 @@ dict = [
   "curiosity mars",
   "large hadron collider",
   "hubble",
-  "тарковский фильмы"
+  "тарковский фильмы",
+  "lotus flower",
+  "dinosaur"
 ]
 
 speed = "fast"
 tags = []
 playing = true
 interval = 2000
-delay = 200
 
 idleTimeout = 2500
 
@@ -115,13 +116,19 @@ setSpeed = (newSpeed) ->
     speed = newSpeed
 
 tagHtml = (tagName) ->
-  return "<div class=\"tag-item\"><p>#{ tagName }</p></div>"
+  return "<div class=\"tag-item\" id=\"tag-#{ tagName.replace(' ', '-') }\"><p>#{ tagName }</p></div>"
 
 addTag = ->
   tagName = $("#tags-input").val()
-  tags.push tagName
+  tags.unshift tagName
+  console.log(tags, tags.length)
   fetchImagesByKeyword tagName
   $(".container").prepend(tagHtml(tagName))
+  $(".tag-item#tag-#{ tagName.replace(' ', '-') }").on("click", ->
+    tagToRemove = $(this).children().first().html()
+    removeTag tagToRemove
+    $(this).remove()
+  )
   $("#tags-input").val("")
   if tags.length == 1
     imageShowTick = setInterval addImageIntoDOM, interval
@@ -131,8 +138,9 @@ addTag = ->
 
 removeTag = (tagName) ->
   index = tags.indexOf(tagName)
-  tags.splice index, 1
-  if tags.length < 1
+  tags.splice(index, 1)
+  console.log(tags, tags.length)
+  if tags.length <= 0
     clearInterval imageShowTick
     $(".control > .play").show()
     $(".control > .pause").hide()
@@ -144,7 +152,7 @@ removeTag = (tagName) ->
     imageQueue = $.grep(imageQueue, (image) ->
       return image.tag != tagName
       )
-    $(".images-layer > ._#{ tagName }").remove()
+    $(".images-layer > ._#{ tagName.replace(' ', '-') }").remove()
     imageQueue.shuffle()
 
 addImageIntoDOM = ->
@@ -152,17 +160,14 @@ addImageIntoDOM = ->
   imageIndex = uniqueImageId % imageQueue.length
   if imageIndex == 0
     imageQueue.shuffle()
-  $(".images-layer").append("<img class=\"_image _#{ imageQueue[imageIndex].tag }\" id=\"image-#{ uniqueImageId }\" src=\"#{ imageQueue[imageIndex].url }\" onerror=\"var newSrc=Math.floor(Math.random()*595); this.onerror=null; this.src='images/emoji/' + newSrc + '.png'; $(this).css({'height':'160px','width':'160px'});\"/>")
+  $(".images-layer").append("<img class=\"_image _#{ imageQueue[imageIndex].tag.replace(' ', '-') }\" id=\"image-#{ uniqueImageId }\" src=\"#{ imageQueue[imageIndex].url }\" onerror=\"var newSrc=Math.floor(Math.random()*595); this.onerror=null; this.src='images/emoji/' + newSrc + '.png'; $(this).css({'height':'160px','width':'160px'});\"/>")
   image = $("#image-#{ uniqueImageId }")
   image.css({
     "left" : (Math.floor(Math.random() * ($(window).width() - imageQueue[imageIndex].width))) + randomGap(imageQueue[imageIndex].width)
     "top" : (Math.floor(Math.random() * ($(window).height() - imageQueue[imageIndex].height))) + randomGap(imageQueue[imageIndex].height)
     "width" : imageQueue[imageIndex].width
     "height" : imageQueue[imageIndex].height
-    }).hide()
-  setTimeout( ->
-    image.show()
-  , delay)
+    })
   if $(".images-layer > img").length > imagesPuff
     $(".images-layer > img:first").remove()
 
@@ -178,7 +183,7 @@ jQuery.extend getQueryParameters: (str) ->
   ).bind({}))[0]
 
 getShareUrl = ->
-  str = document.location.origin + "?tags=" + encodeURI(tags.join(","))
+  str = document.location.origin + "?tags=" + encodeURI(tags.join(",")) + "&dirty=" + dirty
 
 ###
 helpers
@@ -308,14 +313,19 @@ $(document).ready ->
   else
     tags = getRandomInitialTags(dict, 3)
 
-  $(".about").hide()
+  if queryParams["dirty"] == "false"
+    dirty = false
+  else
+    dirty = true
 
-  $(".share-url").hide()
-
-  if dirty
+  if dirty == false
     $(".dirty-prompt").hide()
   else
     $(".safe-prompt").hide()
+
+  $(".about").hide()
+
+  $(".share-url").hide()
 
   setIdleTimeout idleTimeout
 
@@ -464,11 +474,6 @@ $(document).ready ->
   $(".add").on("click", ->
     if $("#tags-input").val()
       addTag()
-      $(".tag-item").on("click", ->
-        tagToRemove = $(this).children().first().html()
-        removeTag tagToRemove
-        $(this).remove()
-      )
     else
       tagsInputBlink()
   )
@@ -477,11 +482,6 @@ $(document).ready ->
   $("#tags-input").on("keyup", (event) ->
     if event.which == 13 && $("#tags-input").val()
       addTag()
-      $(".tag-item").on("click", ->
-        tagToRemove = $(this).children().first().html()
-        removeTag tagToRemove
-        $(this).remove()
-      )
     else if !$("#tags-input").val()
       tagsInputBlink()
     )
