@@ -49,7 +49,9 @@ dict = [
   "hubble",
   "тарковский фильмы",
   "lotus flower",
-  "dinosaur"
+  "dinosaur",
+  "tokyo",
+  "ghost in the shell"
 ]
 
 speed = "fast"
@@ -116,21 +118,21 @@ setSpeed = (newSpeed) ->
     speed = newSpeed
 
 tagHtml = (tagName) ->
-  return "<div class=\"tag-item\" id=\"tag-#{ tagName.replace(' ', '-') }\"><p>#{ tagName }</p></div>"
+  return "<div class=\"tag-item\" id=\"tag-#{ tagName.split(' ').join('-') }\"><p>#{ tagName }</p></div>"
 
 addTag = ->
   tagName = $("#tags-input").val()
   tags.unshift tagName
-  console.log(tags, tags.length)
   fetchImagesByKeyword tagName
   $(".container").prepend(tagHtml(tagName))
-  $(".tag-item#tag-#{ tagName.replace(' ', '-') }").on("click", ->
+  $(".tag-item#tag-#{ tagName.split(' ').join('-') }").on("click", ->
     tagToRemove = $(this).children().first().html()
     removeTag tagToRemove
     $(this).remove()
   )
   $("#tags-input").val("")
   if tags.length == 1
+    $(".share").show()
     imageShowTick = setInterval addImageIntoDOM, interval
     $(".control > .play").hide()
     $(".control > .pause").show()
@@ -139,7 +141,6 @@ addTag = ->
 removeTag = (tagName) ->
   index = tags.indexOf(tagName)
   tags.splice(index, 1)
-  console.log(tags, tags.length)
   if tags.length <= 0
     clearInterval imageShowTick
     $(".control > .play").show()
@@ -148,11 +149,12 @@ removeTag = (tagName) ->
     imageQueue = []
     tags = []
     $(".images-layer").empty()
+    $(".share").hide()
   else
     imageQueue = $.grep(imageQueue, (image) ->
       return image.tag != tagName
       )
-    $(".images-layer > ._#{ tagName.replace(' ', '-') }").remove()
+    $(".images-layer > ._#{ tagName.split(' ').join('-') }").remove()
     imageQueue.shuffle()
 
 addImageIntoDOM = ->
@@ -160,7 +162,7 @@ addImageIntoDOM = ->
   imageIndex = uniqueImageId % imageQueue.length
   if imageIndex == 0
     imageQueue.shuffle()
-  $(".images-layer").append("<img class=\"_image _#{ imageQueue[imageIndex].tag.replace(' ', '-') }\" id=\"image-#{ uniqueImageId }\" src=\"#{ imageQueue[imageIndex].url }\" onerror=\"var newSrc=Math.floor(Math.random()*595); this.onerror=null; this.src='images/emoji/' + newSrc + '.png'; $(this).css({'height':'160px','width':'160px'});\"/>")
+  $(".images-layer").append("<img class=\"_image _#{ imageQueue[imageIndex].tag.split(' ').join('-') }\" id=\"image-#{ uniqueImageId }\" src=\"#{ imageQueue[imageIndex].url }\" onerror=\"var newSrc=Math.floor(Math.random()*595); this.onerror=null; this.src='images/emoji/' + newSrc + '.png'; $(this).css({'height':'160px','width':'160px'});\"/>")
   image = $("#image-#{ uniqueImageId }")
   image.css({
     "left" : (Math.floor(Math.random() * ($(window).width() - imageQueue[imageIndex].width))) + randomGap(imageQueue[imageIndex].width)
@@ -271,7 +273,7 @@ google request
 
 fetchGoogleImages = (keyword) ->
   reqURL = "http://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=8&imgsz=large&q=#{ keyword }"
-  queries = [0, 8, 16, 24, 32, 40]
+  queries = [0, 8, 16, 24, 32, 40, 48]
   queries.shuffle()
   $.map queries, (start) ->
     $.ajax
@@ -287,16 +289,18 @@ fetchGoogleImages = (keyword) ->
 instagram request
 ###
 
-fetchInstagramImages = (hashTag) ->
+fetchInstagramImages = (tag) ->
+  hashTag = tag.replace(/\s+/g, "")
   clientId = "80603d73bec0476b828b34203b234dce"
   reqURL = "https://api.instagram.com/v1/tags/#{ hashTag }/media/recent?client_id=#{ clientId }"
   $.ajax
     url: reqURL
     dataType: "jsonp"
     success: (response) ->
-      pushImagesIntoQueue response, hashTag, "instagram"
+      pushImagesIntoQueue response, tag, "instagram"
     data:
-      count: 10
+      count: 20
+      max_tag_id: Math.floor(Math.random() * 8)
 
 ###
 main stuff
@@ -308,20 +312,38 @@ $(document).ready ->
 
   queryParams = $.getQueryParameters()
 
-  if queryParams["tags"]
-    tags = decodeURI(queryParams["tags"]).split(",")
-  else
-    tags = getRandomInitialTags(dict, 3)
+  tags = getRandomInitialTags(dict, 3)
 
-  if queryParams["dirty"] == "false"
-    dirty = false
-  else
-    dirty = true
-
-  if dirty == false
+  if dirty == true
     $(".dirty-prompt").hide()
   else
     $(".safe-prompt").hide()
+
+  if queryParams[""]
+    if queryParams["tags"]
+      tags = decodeURI(queryParams["tags"]).split(",")
+    if queryParams["dirty"] == "false"
+      dirty = false
+      $(".safe-prompt").css({
+        "display": "none"
+      })
+      $(".dirty-prompt").css({
+        "display": "block"
+      })
+      $(".tags-input").css({
+        "background": "rgba(255, 255, 255, 0.3)"
+      })
+    else if queryParams["dirty"] == "true"
+      dirty = true
+      $(".safe-prompt").css({
+        "display": "block"
+      })
+      $(".dirty-prompt").css({
+        "display": "none"
+      })
+      $(".tags-input").css({
+        "background": "rgba(0, 0, 0, 0.3)"
+      })
 
   $(".about").hide()
 
