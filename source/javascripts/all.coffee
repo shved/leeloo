@@ -112,13 +112,27 @@ setSpeed = (newSpeed) ->
       else interval = 2000
 
     if playing
-      clearInterval imageShowTick
-      imageShowTick = setInterval addImageIntoDOM, interval
+      pause(true)
+      play(interval)
 
     speed = newSpeed
 
+play = (speed = interval) ->
+  imageShowTick = setInterval addImageIntoDOM, speed
+  console.log('image show tick is ', imageShowTick, speed)
+  playing = true
+  $('.control > .play').hide()
+  $('.control > .pause').show()
+
+pause = (silently = false) ->
+  clearInterval imageShowTick
+  $('.control > .play').show()
+  $('.control > .pause').hide()
+  if !silently
+    playing = false
+
+
 convertUserTextIntoTag = (tag) ->
-  console.log(tag.split(' ').join('-').replace("'", ''))
   return tag.split(' ').join('-').replace("'", '')
 
 tagHtml = (tagName) ->
@@ -137,19 +151,13 @@ addTag = ->
   $('#tags-input').val('')
   if tags.length == 1
     $('.share').show()
-    imageShowTick = setInterval addImageIntoDOM, interval
-    $('.control > .play').hide()
-    $('.control > .pause').show()
-    playing = true
+    play(interval)
 
 removeTag = (tagName) ->
   index = tags.indexOf(tagName)
   tags.splice(index, 1)
   if tags.length <= 0
-    clearInterval imageShowTick
-    $('.control > .play').show()
-    $('.control > .pause').hide()
-    playing = false
+    pause()
     imageQueue = []
     tags = []
     $('.images-layer').empty()
@@ -295,7 +303,7 @@ instagram request
 
 fetchInstagramImages = (tag) ->
   hashTag = tag.replace(/\s+/g, '')
-  clientId = '80603d73bec0476b828b34203b234dce'
+  clientId = "80603d73bec0476b828b34203b234dce"
   reqURL = "https://api.instagram.com/v1/tags/#{ hashTag }/media/recent?client_id=#{ clientId }"
   $.ajax
     url: reqURL
@@ -314,12 +322,14 @@ $(document).ready ->
 
   #setting up initial state
 
-  if(document).hidden
-    playing = false
-    $('.control > .pause').hide()
+  if !(document).hidden
+    console.log('document visible, playing is ', playing)
+    play(interval)
+    console.log('now playing is ', playing)
   else
-    $('.control > .play').hide()
-    imageShowTick = setInterval addImageIntoDOM, setInterval
+    console.log('document hidden, playing is ', playing)
+    pause(true)
+    console.log('now playing is ', playing)
 
   queryParams = $.getQueryParameters()
 
@@ -373,26 +383,20 @@ $(document).ready ->
   #window visibility
   $(document).on('visibilitychange', ->
     if (document.hidden) && playing
-      clearInterval imageShowTick
+      pause(true)
     if (not (document.hidden))
       if playing
-        imageShowTick = setInterval addImageIntoDOM, interval
+        play(interval)
       else if not playing
         console.log('you\'re lucky')
   )
 
   #play/pause control
   $('.control').on('click', ->
-    if playing == true
-      $('.control > .play').show()
-      $('.control > .pause').hide()
-      playing = false
-      clearInterval imageShowTick
+    if playing
+      pause()
     else if tags.length > 0
-      $('.control > .play').hide()
-      $('.control > .pause').show()
-      playing = true
-      imageShowTick = setInterval addImageIntoDOM, interval
+      play(interval)
     else if tags.length < 1
       tagsInputBlink()
     )
@@ -415,14 +419,14 @@ $(document).ready ->
     $('.about').show()
     $('#bgvid').get(0).play()
     if playing
-      clearInterval imageShowTick
+      pause(true)
   )
 
   $('.about').on('click', '.close', ->
     $('.about').hide()
     $('#bgvid').get(0).pause()
     if playing
-      imageShowTick = setInterval addImageIntoDOM, interval
+      play(interval)
   )
 
   #safe/dirty control
@@ -468,21 +472,15 @@ $(document).ready ->
           $('.about').hide()
           $('#bgvid').get(0).pause()
           if playing
-            imageShowTick = setInterval addImageIntoDOM, interval
+            play(interval)
         if $('.share-url').is(':visible')
           $('.share-url').hide()
       when 32
         if !$('#tags-input').is(':focus')
           if playing
-            $('.control > .play').show()
-            $('.control > .pause').hide()
-            playing = false
-            clearInterval imageShowTick
+            pause()
           else if tags.length > 0
-            $('.control > .play').hide()
-            $('.control > .pause').show()
-            playing = true
-            imageShowTick = setInterval addImageIntoDOM, interval
+            play(interval)
           else if tags.length < 1
             tagsInputBlink()
   )
