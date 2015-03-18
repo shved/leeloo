@@ -119,7 +119,6 @@ setSpeed = (newSpeed) ->
 
 play = (speed = interval) ->
   imageShowTick = setInterval addImageIntoDOM, speed
-  console.log('image show tick is ', imageShowTick, speed)
   playing = true
   $('.control > .play').hide()
   $('.control > .pause').show()
@@ -128,7 +127,7 @@ pause = (silently = false) ->
   clearInterval imageShowTick
   $('.control > .play').show()
   $('.control > .pause').hide()
-  if !silently
+  if silently == false
     playing = false
 
 
@@ -323,13 +322,9 @@ $(document).ready ->
   #setting up initial state
 
   if !(document).hidden
-    console.log('document visible, playing is ', playing)
     play(interval)
-    console.log('now playing is ', playing)
   else
-    console.log('document hidden, playing is ', playing)
     pause(true)
-    console.log('now playing is ', playing)
 
   queryParams = $.getQueryParameters()
 
