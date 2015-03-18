@@ -30,7 +30,7 @@ dict = [
   'Psychic TV',
   'Liquid Sky',
   'acid',
-  'DMT',
+  'ayahuasca',
   'kali',
   'AK-47',
   'virtual reality',
