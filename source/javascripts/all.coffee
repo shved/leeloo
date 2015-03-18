@@ -353,8 +353,7 @@ $(document).ready ->
 
   queryParams = $.getQueryParameters()
 
-  tags = ['doom II', 'Charles Manson']
-  #tags = getRandomInitialTags(dict, 3)
+  tags = getRandomInitialTags(dict, 3)
 
   if dirty == true
     $('.dirty-prompt').hide()
