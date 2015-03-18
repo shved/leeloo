@@ -85,6 +85,7 @@ Array.prototype.shuffle = ->
 fetchImagesByKeyword = (keyword) ->
   fetchGoogleImages keyword
   fetchInstagramImages keyword
+  fetchFlickrImages keyword
 
 setSpeed = (newSpeed) ->
   if newSpeed == 'slow' or 'fast' or 'faster'
@@ -175,12 +176,18 @@ addImageIntoDOM = ->
     imageQueue.shuffle()
   $('.images-layer').append("<img class=\"_image _#{ convertUserTextIntoTag(imageQueue[imageIndex].tag) }\" id=\"image-#{ uniqueImageId }\" src=\"#{ imageQueue[imageIndex].url }\" onload=\"$(this).show();\" onerror=\"var newSrc=Math.floor(Math.random()*595); this.onerror=null; this.src='images/emoji/' + newSrc + '.png'; $(this).css({'height':'160px','width':'160px'});\"/>")
   image = $("#image-#{ uniqueImageId }")
-  image.css({
-    'left' : (Math.floor(Math.random() * ($(window).width() - imageQueue[imageIndex].width))) + randomGap(imageQueue[imageIndex].width)
-    'top' : (Math.floor(Math.random() * ($(window).height() - imageQueue[imageIndex].height))) + randomGap(imageQueue[imageIndex].height)
-    'width' : imageQueue[imageIndex].width
-    'height' : imageQueue[imageIndex].height
-    })
+  if imageQueue[imageIndex].width && imageQueue[imageIndex].height
+    image.css({
+      'left' : (Math.floor(Math.random() * ($(window).width() - imageQueue[imageIndex].width))) + randomGap(imageQueue[imageIndex].width)
+      'top' : (Math.floor(Math.random() * ($(window).height() - imageQueue[imageIndex].height))) + randomGap(imageQueue[imageIndex].height)
+      'width' : imageQueue[imageIndex].width
+      'height' : imageQueue[imageIndex].height
+      })
+  else
+    image.css({
+      'left' : (Math.floor(Math.random() * ($(window).width() - 500))) + randomGap(500)
+      'top' : (Math.floor(Math.random() * ($(window).height() - 300))) + randomGap(300)
+      })
   if $('.images-layer > img').length > imagesPuff
     $('.images-layer > img:first').remove()
 
@@ -266,7 +273,7 @@ pushImagesIntoQueue = (response, tag, source) ->
             height: height
             tag: tag
           }
-      imageQueue.shuffle()
+        imageQueue.shuffle()
     when 'instagram'
       if response.data[0].images.standard_resolution.url
         for post in response.data
@@ -276,7 +283,16 @@ pushImagesIntoQueue = (response, tag, source) ->
             height: 612
             tag: tag
           }
-      imageQueue.shuffle()
+        imageQueue.shuffle()
+    when 'flickr'
+      if response.items[0].media.m
+        for item in response.items
+          url = item.media.m
+          imageQueue.push {
+            url: url.replace('_m', '')
+            tag: tag
+          }
+        imageQueue.shuffle()
 
 ###
 google request
@@ -314,6 +330,15 @@ fetchInstagramImages = (tag) ->
       max_tag_id: Math.floor(Math.random() * 8)
 
 ###
+flickr request
+###
+fetchFlickrImages = (tag) ->
+  reqURL = "https://api.flickr.com/services/feeds/photos_public.gne?tagmode=any&tags=#{ tag }&format=json&jsoncallback=?"
+  $.getJSON(reqURL, (data) ->
+    pushImagesIntoQueue data, tag, 'flickr'
+    )
+
+###
 main stuff
 ###
 
@@ -328,7 +353,8 @@ $(document).ready ->
 
   queryParams = $.getQueryParameters()
 
-  tags = getRandomInitialTags(dict, 3)
+  tags = ['doom II', 'Charles Manson']
+  #tags = getRandomInitialTags(dict, 3)
 
   if dirty == true
     $('.dirty-prompt').hide()
