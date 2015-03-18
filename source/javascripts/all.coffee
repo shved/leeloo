@@ -117,15 +117,19 @@ setSpeed = (newSpeed) ->
 
     speed = newSpeed
 
+convertUserTextIntoTag = (tag) ->
+  console.log(tag.split(' ').join('-').replace("'", ''))
+  return tag.split(' ').join('-').replace("'", '')
+
 tagHtml = (tagName) ->
-  return "<div class=\"tag-item\" id=\"tag-#{ tagName.split(' ').join('-') }\"><p>#{ tagName }</p></div>"
+  return "<div class=\"tag-item\" id=\"tag-#{ convertUserTextIntoTag(tagName) }\"><p>#{ tagName }</p></div>"
 
 addTag = ->
   tagName = $('#tags-input').val()
   tags.unshift tagName
   fetchImagesByKeyword tagName
   $('.container').prepend(tagHtml(tagName))
-  $(".tag-item#tag-#{ tagName.split(' ').join('-') }").on('click', ->
+  $(".tag-item#tag-#{ convertUserTextIntoTag(tagName) }").on('click', ->
     tagToRemove = $(this).children().first().html()
     removeTag tagToRemove
     $(this).remove()
@@ -154,7 +158,7 @@ removeTag = (tagName) ->
     imageQueue = $.grep(imageQueue, (image) ->
       return image.tag != tagName
       )
-    $(".images-layer > ._#{ tagName.split(' ').join('-') }").remove()
+    $(".images-layer > ._#{ convertUserTextIntoTag(tagName) }").remove()
     imageQueue.shuffle()
 
 addImageIntoDOM = ->
@@ -162,7 +166,7 @@ addImageIntoDOM = ->
   imageIndex = uniqueImageId % imageQueue.length
   if imageIndex == 0
     imageQueue.shuffle()
-  $('.images-layer').append("<img class=\"_image _#{ imageQueue[imageIndex].tag.split(' ').join('-') }\" id=\"image-#{ uniqueImageId }\" src=\"#{ imageQueue[imageIndex].url }\" onload=\"$(this).show();\" onerror=\"var newSrc=Math.floor(Math.random()*595); this.onerror=null; this.src='images/emoji/' + newSrc + '.png'; $(this).css({'height':'160px','width':'160px'});\"/>")
+  $('.images-layer').append("<img class=\"_image _#{ convertUserTextIntoTag(imageQueue[imageIndex].tag) }\" id=\"image-#{ uniqueImageId }\" src=\"#{ imageQueue[imageIndex].url }\" onload=\"$(this).show();\" onerror=\"var newSrc=Math.floor(Math.random()*595); this.onerror=null; this.src='images/emoji/' + newSrc + '.png'; $(this).css({'height':'160px','width':'160px'});\"/>")
   image = $("#image-#{ uniqueImageId }")
   image.css({
     'left' : (Math.floor(Math.random() * ($(window).width() - imageQueue[imageIndex].width))) + randomGap(imageQueue[imageIndex].width)
