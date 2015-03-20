@@ -86,6 +86,7 @@ fetchImagesByKeyword = (keyword) ->
   fetchGoogleImages keyword
   fetchInstagramImages keyword
   fetchFlickrImages keyword
+  fetchTumblrImages keyword
 
 setSpeed = (newSpeed) ->
   if newSpeed == 'slow' or 'fast' or 'faster'
@@ -322,7 +323,10 @@ pushInstagramImagesIntoQueue = (response, tag) ->
 ###
 flickr request
 ###
+
 fetchFlickrImages = (tag) ->
+  if tag.indexOf(' ') >= 0
+    tag = tag.slice(0, tag.indexOf(' '))
   reqURL = "https://api.flickr.com/services/feeds/photos_public.gne?tagmode=any&tags=#{ tag }&format=json&jsoncallback=?"
   $.getJSON(reqURL, (data) ->
     pushFlickrImagesIntoQueue data, tag
@@ -342,7 +346,28 @@ pushFlickrImagesIntoQueue = (response, tag) ->
 tumblr request
 ###
 
+fetchTumblrImages = (tag) ->
+  if tag.indexOf(' ') >= 0
+    tag = tag.slice(0, tag.indexOf(' '))
+  api_key = 'faCvJFK7FWT9jSl7BojKsIqNn5IenzHlPaQR0r1nanmQoBhlk6'
+  reqURL = "http://api.tumblr.com/v2/tagged?tag=#{ tag }&limit=80&api_key=#{ api_key }"
+  $.ajax
+    url: reqURL
+    dataType: 'jsonp'
+    success: (response) ->
+      pushTumblrImagesIntoQueue response, tag
 
+pushTumblrImagesIntoQueue = (response_obj, tag) ->
+  if response_obj.response[0]
+    for response in response_obj.response
+      if response.photos
+        for photo in response.photos
+          imageQueue.push {
+            url: photo.alt_sizes[1].url
+            width: photo.alt_sizes[1].width
+            height: photo.alt_sizes[1].height
+            tag: tag
+          }
 
 ###
 main stuff
@@ -502,6 +527,7 @@ $(document).ready ->
         if $('.share-url').is(':visible')
           $('.share-url').hide()
       when 32
+        console.log(imageQueue.length)
         if !$('#tags-input').is(':focus')
           if playing
             pause()
