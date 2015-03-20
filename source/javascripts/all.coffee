@@ -368,6 +368,7 @@ pushTumblrImagesIntoQueue = (response_obj, tag) ->
             height: photo.alt_sizes[1].height
             tag: tag
           }
+    imageQueue.shuffle()
 
 ###
 main stuff
@@ -527,7 +528,6 @@ $(document).ready ->
         if $('.share-url').is(':visible')
           $('.share-url').hide()
       when 32
-        console.log(imageQueue.length)
         if !$('#tags-input').is(':focus')
           if playing
             pause()
