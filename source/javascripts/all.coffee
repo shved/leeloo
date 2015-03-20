@@ -245,55 +245,6 @@ shareHoverAnimation = ->
 ajax requests stuff
 ###
 
-pushImagesIntoQueue = (response, tag, source) ->
-  switch source
-    when 'google'
-      if response.responseData.results[0].url
-        for result in response.responseData.results
-          width = result.width
-          height = result.height
-          ratio = height / width
-          if ($(window).width() < 800) || ($(window).height() < 800)
-            maxW = $(window).width()
-            maxH = $(window).height()
-          else
-            maxW = 800
-            maxH = 800
-
-          if (width > maxW) && (ratio <= 1)
-            width = maxW
-            height = width * ratio
-          else if height > 800
-            height = maxH
-            width = height / ratio
-
-          imageQueue.push {
-            url: result.url
-            width: width
-            height: height
-            tag: tag
-          }
-        imageQueue.shuffle()
-    when 'instagram'
-      if response.data[0].images.standard_resolution.url
-        for post in response.data
-          imageQueue.push {
-            url: post.images.standard_resolution.url
-            width: 612
-            height: 612
-            tag: tag
-          }
-        imageQueue.shuffle()
-    when 'flickr'
-      if response.items[0].media.m
-        for item in response.items
-          url = item.media.m
-          imageQueue.push {
-            url: url.replace('_m', '')
-            tag: tag
-          }
-        imageQueue.shuffle()
-
 ###
 google request
 ###
@@ -307,10 +258,38 @@ fetchGoogleImages = (keyword) ->
       url: reqURL
       dataType: 'jsonp'
       success: (response) ->
-        pushImagesIntoQueue response, keyword, 'google'
+        pushGoogleImagesIntoQueue response, keyword
       data:
         'start': start
         'safe': if dirty then 'off' else 'on'
+
+pushGoogleImagesIntoQueue = (response, tag) ->
+  if response.responseData.results[0].url
+    for result in response.responseData.results
+      width = result.width
+      height = result.height
+      ratio = height / width
+      if ($(window).width() < 800) || ($(window).height() < 800)
+        maxW = $(window).width()
+        maxH = $(window).height()
+      else
+        maxW = 800
+        maxH = 800
+
+      if (width > maxW) && (ratio <= 1)
+        width = maxW
+        height = width * ratio
+      else if height > 800
+        height = maxH
+        width = height / ratio
+
+      imageQueue.push {
+        url: result.url
+        width: width
+        height: height
+        tag: tag
+      }
+    imageQueue.shuffle()
 
 ###
 instagram request
@@ -324,10 +303,21 @@ fetchInstagramImages = (tag) ->
     url: reqURL
     dataType: 'jsonp'
     success: (response) ->
-      pushImagesIntoQueue response, tag, 'instagram'
+      pushInstagramImagesIntoQueue response, tag
     data:
       count: 20
       max_tag_id: Math.floor(Math.random() * 8)
+
+pushInstagramImagesIntoQueue = (response, tag) ->
+  if response.data[0].images.standard_resolution.url
+    for post in response.data
+      imageQueue.push {
+        url: post.images.standard_resolution.url
+        width: 612
+        height: 612
+        tag: tag
+      }
+    imageQueue.shuffle()
 
 ###
 flickr request
@@ -335,8 +325,24 @@ flickr request
 fetchFlickrImages = (tag) ->
   reqURL = "https://api.flickr.com/services/feeds/photos_public.gne?tagmode=any&tags=#{ tag }&format=json&jsoncallback=?"
   $.getJSON(reqURL, (data) ->
-    pushImagesIntoQueue data, tag, 'flickr'
+    pushFlickrImagesIntoQueue data, tag
     )
+
+pushFlickrImagesIntoQueue = (response, tag) ->
+  if response.items[0].media.m
+    for item in response.items
+      url = item.media.m
+      imageQueue.push {
+        url: url.replace('_m', '')
+        tag: tag
+      }
+    imageQueue.shuffle()
+
+###
+tumblr request
+###
+
+
 
 ###
 main stuff
