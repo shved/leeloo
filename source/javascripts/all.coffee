@@ -379,38 +379,37 @@ $(document).ready ->
   #setting up initial state
 
   queryParams = $.getQueryParameters()
-  console.log(queryParams)
 
   if dirty == true
     $('.dirty-prompt').hide()
   else
     $('.safe-prompt').hide()
 
-  if !queryParams['']
-    if queryParams['tags']
-      tags = decodeURI(queryParams['tags']).split(',')
-    if queryParams['dirty'] == 'false'
-      dirty = false
-      $('.safe-prompt').css({
-        'display': 'none'
-      })
-      $('.dirty-prompt').css({
-        'display': 'block'
-      })
-      $('.tags-input').css({
-        'background': 'rgba(255, 255, 255, 0.3)'
-      })
-    else if queryParams['dirty'] == 'true'
-      dirty = true
-      $('.safe-prompt').css({
-        'display': 'block'
-      })
-      $('.dirty-prompt').css({
-        'display': 'none'
-      })
-      $('.tags-input').css({
-        'background': 'rgba(0, 0, 0, 0.3)'
-      })
+  if queryParams['dirty'] == 'false'
+    dirty = false
+    $('.safe-prompt').css({
+      'display': 'none'
+    })
+    $('.dirty-prompt').css({
+      'display': 'block'
+    })
+    $('.tags-input').css({
+      'background': 'rgba(255, 255, 255, 0.3)'
+    })
+  else if queryParams['dirty'] == 'true'
+    dirty = true
+    $('.safe-prompt').css({
+      'display': 'block'
+    })
+    $('.dirty-prompt').css({
+      'display': 'none'
+    })
+    $('.tags-input').css({
+      'background': 'rgba(0, 0, 0, 0.3)'
+    })
+
+  if queryParams['tags']
+    tags = decodeURI(queryParams['tags']).split(',')
   else
     tags = getRandomInitialTags(dict, 3)
 

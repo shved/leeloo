@@ -348,17 +348,21 @@ body {
 #logo {
   font-family: "PT Mono";
   font-style: bold;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 30px;
   text-decoration: none;
   color: black;
   cursor: url(image-path("cur_i.png")) 25 25, not-allowed;
   padding: 0;
   margin: 0;
+  border-top: 2px solid black;
   position: absolute;
-  bottom: 60px;
+  bottom: 58px;
   left: 60px;
   transform: rotate(180deg);
+  &:hover {
+    border-top: none;
+  }
 }
 
 iframe {
