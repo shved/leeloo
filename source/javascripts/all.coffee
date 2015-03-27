@@ -379,8 +379,7 @@ $(document).ready ->
   #setting up initial state
 
   queryParams = $.getQueryParameters()
-
-  tags = getRandomInitialTags(dict, 3)
+  console.log(queryParams)
 
   if dirty == true
     $('.dirty-prompt').hide()
@@ -412,11 +411,8 @@ $(document).ready ->
       $('.tags-input').css({
         'background': 'rgba(0, 0, 0, 0.3)'
       })
-
-  if !(document).hidden
-    play(interval)
   else
-    pause(true)
+    tags = getRandomInitialTags(dict, 3)
 
   $('.about').hide()
 
@@ -428,7 +424,10 @@ $(document).ready ->
     $('.container').prepend(tagHtml(tag))
     fetchImagesByKeyword tag
 
-  setSpeed speed
+  if (document).hidden
+    pause(true)
+  else
+    play(interval)
 
   #setting up all event handlers
 
@@ -446,7 +445,7 @@ $(document).ready ->
   #play/pause control
   $('.control').on('click', ->
     if playing
-      pause()
+      pause(false)
     else if tags.length > 0
       play(interval)
     else if tags.length < 1
