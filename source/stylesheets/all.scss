@@ -33,7 +33,7 @@ $controls-font-size: 22px;
 body {
   font-size: 18px;
   margin: $body-margin;
-  background: gray;
+  background: url(image-path("bg.jpg")) repeat fixed;
   overflow: hidden;
   user-select: none;
 }
