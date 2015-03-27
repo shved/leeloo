@@ -614,12 +614,13 @@ $(document).ready ->
           else if tags.length < 1
             tagsInputBlink()
       when 72
-        if uiVisibility == true
-          $('.ui-elements').fadeOut(500)
-          uiVisibility = false
-        else
-          $('.ui-elements').fadeIn(500)
-          uiVisibility = true
+        if not $("#tags-input").is(":focus")
+          if uiVisibility == true
+            $('.ui-elements').fadeOut(500)
+            uiVisibility = false
+          else
+            $('.ui-elements').fadeIn(500)
+            uiVisibility = true
   )
 
   #share button
