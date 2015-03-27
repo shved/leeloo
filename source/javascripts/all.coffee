@@ -378,11 +378,6 @@ $(document).ready ->
 
   #setting up initial state
 
-  if !(document).hidden
-    play(interval)
-  else
-    pause(true)
-
   queryParams = $.getQueryParameters()
 
   tags = getRandomInitialTags(dict, 3)
@@ -417,6 +412,11 @@ $(document).ready ->
       $('.tags-input').css({
         'background': 'rgba(0, 0, 0, 0.3)'
       })
+
+  if !(document).hidden
+    play(interval)
+  else
+    pause(true)
 
   $('.about').hide()
 
