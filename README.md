@@ -1,1 +1,1 @@
-Leeloo is a killing designer inspiration tool currently living on http://leeloo.shvedchenko.ru/
+Leeloo is a killing designer inspiration tool living on http://leeloo.pics/
