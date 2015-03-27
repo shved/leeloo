@@ -386,7 +386,7 @@ $(document).ready ->
   else
     $('.safe-prompt').hide()
 
-  if queryParams['']
+  if !queryParams['']
     if queryParams['tags']
       tags = decodeURI(queryParams['tags']).split(',')
     if queryParams['dirty'] == 'false'
