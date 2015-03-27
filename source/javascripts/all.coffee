@@ -69,6 +69,8 @@ uniqueImageId = 0
 
 dirty = true
 
+uiVisibility = true
+
 ###
 functions
 ###
@@ -112,7 +114,6 @@ setSpeed = (newSpeed) ->
           'width': '96px'
         })
       else interval = 2000
-
     if playing
       pause(true)
       play(interval)
@@ -533,6 +534,13 @@ $(document).ready ->
             play(interval)
           else if tags.length < 1
             tagsInputBlink()
+      when 72
+        if uiVisibility == true
+          $('.ui-elements').fadeOut(500)
+          uiVisibility = false
+        else
+          $('.ui-elements').fadeIn(500)
+          uiVisibility = true
   )
 
   #share button
