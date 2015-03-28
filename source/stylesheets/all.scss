@@ -2,6 +2,7 @@
 
 @import url("http://fonts.googleapis.com/css?family=PT+Mono");
 @import url("http://fonts.googleapis.com/css?family=PT+Sans:400,700,400italic&subset=latin,cyrillic");
+@import url("http://fonts.googleapis.com/css?family=PT+Sans+Caption:400,700");
 
 $ctrls-rad: 17px;
 $ctrls-height: 34px;
@@ -370,6 +371,47 @@ iframe {
   position: absolute;
   bottom: 65px;
   left: 200px;
+}
+
+.hotkey-hint {
+  display: none;
+  position: fixed;
+  bottom: 60px;
+  left: 60px;
+  padding-left: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-right: 10px;
+  height: 34px;
+  width: 188px;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.3);
+  cursor: default;
+  .h {
+    margin: 0;
+    height: 34px;
+    width: 34px;
+    background: black;
+    border-radius: 6px;
+    p.hotkey {
+      position: fixed;
+      bottom: 26px;
+      left: 66px;
+      color: white;
+      font-family: 'PT Sans Caption', sans-serif;
+      font-weight: 700;
+      font-size: 30px;
+    }
+  }
+  p {
+    position: fixed;
+    bottom: 42px;
+    left: 104px;
+    color: white;
+    font-family: 'PT Sans Caption', sans-serif;
+    font-weight: 400;
+    font-size: 20px;
+  }
 }
 
 .share-url {

@@ -617,9 +617,11 @@ $(document).ready ->
         if not $("#tags-input").is(":focus")
           if uiVisibility == true
             $('.ui-elements').fadeOut(500)
+            $('.hotkey-hint').fadeIn(500)
             uiVisibility = false
           else
             $('.ui-elements').fadeIn(500)
+            $('.hotkey-hint').fadeOut(500)
             uiVisibility = true
   )
 
