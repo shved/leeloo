@@ -173,6 +173,8 @@ dirty = true
 
 uiVisibility = true
 
+randomMode = false
+
 ###
 functions
 ###
@@ -235,37 +237,55 @@ pause = (silently = false) ->
   if silently == false
     playing = false
 
+startRandomQueries = ->
+  for i in [1, 2, 3]
+    imageQueue.push
+      url: "images/emoji/#{ Math.floor(Math.random()*595) }.png"
+      width: 160
+      height: 160
+      tag: 'random'
+  randomImageQueryTick = setInterval fetchGoogleImages, interval
+  randomMode = true
+
+stopRandomQueries = ->
+  clearInterval randomImageQueryTick
+  randomMode = false
 
 convertUserTextIntoTag = (tag) ->
-  return tag.split(' ').join('-').replace("'", '')
+  return tag.split(' ').join('-').replace(/([^a-z0-9]+)/gi, '')
 
 tagHtml = (tagName) ->
   return "<div class=\"tag-item\" id=\"tag-#{ convertUserTextIntoTag(tagName) }\"><p>#{ tagName }</p></div>"
 
 addTag = ->
   tagName = $('#tags-input').val()
-  tags.unshift tagName
-  fetchImagesByKeyword tagName
-  $('.container').prepend(tagHtml(tagName))
-  $(".tag-item#tag-#{ convertUserTextIntoTag(tagName) }").on('click', ->
-    tagToRemove = $(this).children().first().html()
-    removeTag tagToRemove
-    $(this).remove()
-  )
-  $('#tags-input').val('')
-  if tags.length == 1
-    $('.share').show()
-    play(interval)
+  if tagName != 'random'
+    tags.unshift tagName
+    fetchImagesByKeyword tagName
+    $('.container').prepend(tagHtml(tagName))
+    $(".tag-item#tag-#{ convertUserTextIntoTag(tagName) }").on('click', ->
+      tagToRemove = $(this).children().first().html()
+      removeTag tagToRemove
+      $(this).remove()
+    )
+    $('#tags-input').val('')
+    if tags.length == 1
+      stopRandomQueries()
+      $('.share').show()
+  else
+    for tag in tags
+      removeTag(tag)
 
 removeTag = (tagName) ->
   index = tags.indexOf(tagName)
   tags.splice(index, 1)
   if tags.length <= 0
-    pause()
     imageQueue = []
     tags = []
+    $('.tag-item').remove()
     $('.images-layer').empty()
     $('.share').hide()
+    startRandomQueries()
   else
     imageQueue = $.grep(imageQueue, (image) ->
       return image.tag != tagName
@@ -294,6 +314,8 @@ addImageIntoDOM = ->
       })
   if $('.images-layer > img').length > imagesPuff
     $('.images-layer > img:first').remove()
+    if randomMode
+      imageQueue.shift()
 
 ###
 url params stuff
@@ -353,54 +375,71 @@ ajax requests stuff
 google request
 ###
 
-fetchGoogleImages = (keyword) ->
-  reqURL = "http://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=8&imgsz=large&q=#{ keyword }"
-  queries = [0, 8, 16, 24, 32, 40, 48]
-  queries.shuffle()
-  $.map queries, (start) ->
+fetchGoogleImages = (keyword = 'random') ->
+  if keyword != 'random'
+    reqURL = "http://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=8&imgsz=large&q=#{ keyword }"
+    queries = [0, 8, 16, 24, 32, 40, 48]
+    queries.shuffle()
+    $.map queries, (start) ->
+      $.ajax
+        url: reqURL
+        dataType: 'jsonp'
+        success: (response) ->
+          pushGoogleImagesIntoQueue response, keyword
+        data:
+          'start': start
+          'safe': if dirty then 'off' else 'on'
+  else
+    queries = [0, 8, 16, 24, 32, 40, 48]
+    reqURL = "http://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=1&imgsz=large&q=#{ dict[Math.floor(Math.random() * dict.length)] }"
     $.ajax
-      url: reqURL
-      dataType: 'jsonp'
-      success: (response) ->
-        pushGoogleImagesIntoQueue response, keyword
-      data:
-        'start': start
-        'safe': if dirty then 'off' else 'on'
+        url: reqURL
+        dataType: 'jsonp'
+        success: (response) ->
+          pushGoogleImagesIntoQueue response, keyword
+        data:
+          'start': queries[Math.floor(Math.random() * queries.length)]
+          'safe': if dirty then 'off' else 'on'
 
 pushGoogleImagesIntoQueue = (response, tag) ->
-  if response.responseData.results[0].url
-    for result in response.responseData.results
-      width = result.width
-      height = result.height
-      ratio = height / width
-      if ($(window).width() < 800) || ($(window).height() < 800)
-        maxW = $(window).width()
-        maxH = $(window).height()
-      else
-        maxW = 800
-        maxH = 800
+  if tag != 'random'
+    if response.responseData.results[0].url
+      for result in response.responseData.results
+        googleImagesLogic(result.url, result.width, result.height, tag)
+      imageQueue.shuffle()
+  else
+    if response.responseData.results[0].url
+      result = response.responseData.results[0]
+      console.log('new url = ' + result.url)
+      googleImagesLogic(result.url, result.width, result.height, 'random')
+      console.log(imageQueue.length + ' images')
 
-      if (width > maxW) && (ratio <= 1)
-        width = maxW
-        height = width * ratio
-      else if height > 800
-        height = maxH
-        width = height / ratio
-
-      imageQueue.push {
-        url: result.url
-        width: width
-        height: height
-        tag: tag
-      }
-    imageQueue.shuffle()
+googleImagesLogic = (url, width, height, tag) ->
+  ratio = height / width
+  if ($(window).width() < 800) || ($(window).height() < 800)
+    maxW = $(window).width()
+    maxH = $(window).height()
+  else
+    maxW = 800
+    maxH = 800
+  if (width > maxW) && (ratio <= 1)
+    width = maxW
+    height = width * ratio
+  else if height > 800
+    height = maxH
+    width = height / ratio
+  imageQueue.push
+    url: url
+    width: width
+    height: height
+    tag: tag
 
 ###
 instagram request
 ###
 
 fetchInstagramImages = (tag) ->
-  hashTag = tag.replace(/\s+/g, '')
+  hashTag = convertUserTextIntoTag(tag)
   clientId = "80603d73bec0476b828b34203b234dce"
   reqURL = "https://api.instagram.com/v1/tags/#{ hashTag }/media/recent?client_id=#{ clientId }"
   $.ajax
@@ -547,12 +586,10 @@ $(document).ready ->
   #play/pause control
   $('.control').on('click', ->
     if playing
-      pause(false)
+      pause()
     else if tags.length > 0
       play(interval)
-    else if tags.length < 1
-      tagsInputBlink()
-    )
+  )
 
   #speed control
   $('.slow').on('click', ->
