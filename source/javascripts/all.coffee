@@ -130,7 +130,30 @@ dict = [
   'Visual simplicity pinterest',
   'simplicity',
   'Constructivism',
-  'hand'
+  'hand',
+  'horse head',
+  'Akira',
+  'doraemon nobita',
+  'comme des garçons',
+  'Bape',
+  'Pokemon card',
+  'health goth',
+  'Hawaii shirt',
+  'vaporwave',
+  'Icon of god',
+  'Asap Rocky',
+  'Hood By Air',
+  'Pal Crew',
+  'sportbike',
+  'readymag blog',
+  'Alexander wang collection',
+  'russian criminal tattoo',
+  'space nasa',
+  'miyazaki',
+  'Timelapse',
+  'altamont apparel',
+  'Lazy oaf',
+  'stone island clothing'
 ]
 
 speed = 'fast'
